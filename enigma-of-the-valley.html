@@ -4,294 +4,352 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Enigma of the Valley — Anmol Khandeparkar</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #faf9f6;
-    color: #1a1a1a;
-    font-family: 'Lora', Georgia, serif;
-    font-size: 19px;
-    line-height: 1.85;
-    padding: 80px 24px 120px;
-  }
-  article {
-    max-width: 680px;
-    margin: 0 auto;
-  }
-  .meta {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: #888;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-  h1 {
-    font-size: 42px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-  }
-  .subtitle {
-    font-size: 20px;
-    color: #555;
-    font-style: italic;
-    margin-bottom: 48px;
-    border-bottom: 1px solid #e5e2dc;
-    padding-bottom: 40px;
-  }
-  h2 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #888;
-    margin: 52px 0 20px;
-  }
-  p { margin-bottom: 24px; }
-  p:last-child { margin-bottom: 0; }
-  blockquote {
-    margin: 36px 0;
-    padding: 24px 28px;
-    border-left: 3px solid #1a1a1a;
-    background: #f3f1ec;
-  }
-  blockquote p {
-    font-size: 17px;
-    font-style: italic;
-    color: #222;
-    margin-bottom: 10px;
-  }
-  blockquote .attribution {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-style: normal;
-  }
-  .reaction {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: #555;
-    font-style: italic;
-    margin-top: -16px;
-    margin-bottom: 28px;
-    padding-left: 31px;
-    border-left: 3px solid #e5e2dc;
-  }
-  .decision-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 36px 0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-  }
-  .decision-table th {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 10px 14px;
-    text-align: left;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-  }
-  .decision-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid #e5e2dc;
-    vertical-align: top;
-  }
-  .decision-table tr:last-child td { border-bottom: none; }
-  .decision-table tr:nth-child(even) td { background: #f5f3ef; }
-  .ok { color: #2d7a3a; font-weight: 500; }
-  .bad { color: #c0392b; font-weight: 500; }
-  .great { color: #1a5fb4; font-weight: 500; }
-  .verdict { font-style: italic; color: #555; }
-  .formula-box {
-    background: #1a1a1a;
-    color: #f0ede8;
-    padding: 24px 28px;
-    margin: 36px 0;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .formula-box .formula {
-    font-size: 20px;
-    font-weight: 500;
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-  .formula-box .note {
-    font-size: 13px;
-    color: #aaa;
-    line-height: 1.6;
-  }
-  .closing {
-    margin-top: 56px;
-    padding-top: 36px;
-    border-top: 1px solid #e5e2dc;
-  }
-  .byline {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: #888;
-    margin-top: 40px;
-  }
-  strong { font-weight: 600; }
-  em { font-style: italic; }
+:root {
+  --bg: #07070f;
+  --panel: #0d0d1c;
+  --panel2: #111124;
+  --border: #1c1c38;
+  --border2: #252548;
+  --green: #00ff88;
+  --green-dim: rgba(0,255,136,0.08);
+  --amber: #f5a623;
+  --text: #dce0f0;
+  --muted: #525870;
+  --muted2: #6e738f;
+  --pixel: 'Press Start 2P', monospace;
+  --mono: 'Space Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.9;
+  padding: 80px 24px 120px;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
+  pointer-events: none;
+  z-index: 998;
+}
+article { max-width: 680px; margin: 0 auto; }
+
+/* Nav */
+.back {
+  font-family: var(--pixel);
+  font-size: 7px;
+  color: var(--muted2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 48px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+}
+.back:hover { color: var(--green); border-color: var(--green); }
+
+/* Header */
+.file-header {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+}
+.file-tag {
+  font-family: var(--pixel);
+  font-size: 6px;
+  color: var(--amber);
+  letter-spacing: 2px;
+}
+.file-id {
+  font-family: var(--pixel);
+  font-size: 6px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.article-body {
+  border: 1px solid var(--border2);
+  border-top: none;
+  padding: 40px 36px 48px;
+  background: var(--panel);
+}
+
+.meta {
+  font-family: var(--pixel);
+  font-size: 6px;
+  color: var(--green);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+h1 {
+  font-family: var(--pixel);
+  font-size: clamp(13px, 2vw, 18px);
+  color: #fff;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 30px rgba(0,255,136,0.1);
+}
+.subtitle {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted2);
+  font-style: italic;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.7;
+}
+h2 {
+  font-family: var(--pixel);
+  font-size: 7px;
+  color: var(--green);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 44px 0 16px;
+  line-height: 1.8;
+}
+p { margin-bottom: 20px; color: var(--text); }
+p:last-child { margin-bottom: 0; }
+
+blockquote {
+  margin: 28px 0;
+  padding: 20px 24px;
+  border-left: 3px solid var(--green);
+  background: var(--green-dim);
+}
+blockquote p {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+blockquote .attribution {
+  font-family: var(--pixel);
+  font-size: 6px;
+  color: var(--muted2);
+  letter-spacing: 1px;
+  font-style: normal;
+}
+.reaction {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--amber);
+  font-style: italic;
+  margin-top: -16px;
+  margin-bottom: 20px;
+  padding-left: 27px;
+  border-left: 3px solid var(--amber);
+  line-height: 1.7;
+}
+
+/* Decision table */
+.decision-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.decision-table th {
+  background: var(--green);
+  color: #07070f;
+  padding: 10px 14px;
+  text-align: left;
+  font-family: var(--pixel);
+  font-size: 6px;
+  letter-spacing: 1px;
+}
+.decision-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--muted2);
+}
+.decision-table tr:last-child td { border-bottom: none; }
+.decision-table tr:hover td { background: var(--panel2); }
+.ok { color: var(--green); font-weight: 700; }
+.bad { color: #ff6b6b; font-weight: 700; }
+.great { color: var(--green); font-weight: 700; }
+.verdict { font-style: italic; color: var(--muted2); }
+
+/* Formula box */
+.formula-box {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--amber);
+  padding: 20px 24px;
+  margin: 28px 0;
+}
+.formula-box .formula {
+  font-family: var(--pixel);
+  font-size: 8px;
+  color: var(--amber);
+  margin-bottom: 10px;
+  line-height: 1.8;
+  letter-spacing: 1px;
+}
+.formula-box .note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted2);
+  line-height: 1.6;
+}
+
+strong { color: #fff; font-weight: 700; }
+em { font-style: italic; color: var(--muted2); }
+
+.closing {
+  margin-top: 44px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.byline {
+  font-family: var(--pixel);
+  font-size: 6px;
+  color: var(--muted);
+  margin-top: 36px;
+  letter-spacing: 2px;
+}
+
+/* Footer strip */
+.file-footer {
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-top: none;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.file-footer span {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+}
 </style>
 </head>
 <body>
 <article>
 
-  <div class="meta">Essay · Startups · Feb 2023</div>
-  <h1>The Enigma of the Valley</h1>
-  <p class="subtitle">What actually makes a startup succeed — and why most answers to this question are useless.</p>
+  <a href="index.html" class="back">← Back to Portfolio</a>
 
-  <p>
-    What makes a startup succeed?
-  </p>
-  <p>
-    It's the question every founder, investor, and ambitious twenty-something obsesses over. And most answers feel either too obvious to be useful ("great team, great product!") or too abstract to act on. So here's my attempt at something more useful — a framework built on a handful of principles that, in my view, give any startup a real leg up.
-  </p>
-  <p>
-    It starts with something in shorter supply than capital, talent, or luck: truth.
-  </p>
-
-  <h2>Every great startup is built on one thing that will always be true about its customer</h2>
-
-  <p>
-    Call it an enduring truth — one thing about human behavior or human need that won't change regardless of technology, market cycles, or who's in the White House. The best companies don't chase trends. They find this truth and build their entire business around it.
-  </p>
-  <p>
-    Take Amazon. It started as an internet bookstore and has since expanded into cloud infrastructure, grocery, streaming, and a dozen other verticals. But its core has never shifted: <strong>a customer will always want to pay as little as possible, and receive their order as fast as possible.</strong> Every Amazon innovation — Prime, Fulfillment by Amazon, AWS (which subsidizes lower prices) — flows from that single truth. The enduring truth isn't a mission statement. It's a constraint the entire business optimizes against.
-  </p>
-  <p>
-    Google is the same. Sergey Brin and Larry Page built a search engine. Since then, they've built maps, a browser, an operating system, self-driving cars, and a life sciences division. But the thread running through all of it: <strong>people will always want to find information faster, more accurately, and with less friction than before.</strong> Google Search, Google Maps, Google Chrome — all of them are expressions of that one truth.
-  </p>
-  <p>
-    Without an enduring truth at the core, you're building for a moment rather than for the long run. Moments pass. Truths don't.
-  </p>
-  <p>
-    Now — assuming you've found your truth — there are three other variables that determine whether you survive long enough to act on it.
-  </p>
-
-  <h2>Market beats everything. Here's why.</h2>
-
-  <blockquote>
-    <p>"Great markets make great companies."</p>
-    <div class="attribution">— Don Valentine, Founder, Sequoia Capital</div>
-  </blockquote>
-  <div class="reaction">I'd go further: a great market is forgiving. It gives you time and space to fix everything else.</div>
-
-  <p>
-    Of all the variables in a startup's success, market is the hardest to recover from if you get it wrong. Peter Thiel puts it bluntly in <em>Zero to One</em>: the most successful companies are monopolies. Competition, as he sees it, is for losers. Harsh — but structurally correct.
-  </p>
-  <p>
-    Here's the economic reality. In any business, you need the money you make from a customer over their lifetime to exceed what you spent acquiring them:
-  </p>
-
-  <div class="formula-box">
-    <div class="formula">Customer Lifetime Value − Customer Acquisition Cost = Profit per customer</div>
-    <div class="note">CLTV &gt; CAC = you have a business. CLTV &lt; CAC = you have an expensive hobby.</div>
+  <div class="file-header">
+    <span class="file-tag">◆ INTEL FILE-001 · STARTUPS · STRATEGY</span>
+    <span class="file-id">FEB 2023</span>
   </div>
 
-  <p>
-    In a crowded market, this equation gets ugly fast. Customers have choices, so they leave easily (low CLTV). You need to spend heavily on sales and marketing just to be noticed (high CAC). You're forced to out-innovate competitors while also out-spending them. One slip and your users are gone.
-  </p>
+  <div class="article-body">
+    <div class="meta">Filed by Anmol Khandeparkar</div>
+    <h1>The Enigma of the Valley</h1>
+    <p class="subtitle">What actually makes a startup succeed — and why most answers to this question are useless.</p>
 
-  <blockquote>
-    <p>"When an industry with a reputation for difficult economics meets a manager with a reputation for excellence, it is usually the industry that keeps its reputation intact."</p>
-    <div class="attribution">— Warren Buffett</div>
-  </blockquote>
-  <div class="reaction">Meaning: a bad market will defeat a good team almost every time. Don't fight the market. Pick a better one.</div>
+    <p>What makes a startup succeed?</p>
+    <p>It's the question every founder, investor, and ambitious twenty-something obsesses over. And most answers feel either too obvious to be useful ("great team, great product!") or too abstract to act on. So here's my attempt at something more useful — a framework built on a handful of principles that, in my view, give any startup a real leg up.</p>
+    <p>It starts with something in shorter supply than capital, talent, or luck: truth.</p>
 
-  <p>
-    In a great market — high demand, low competition — the math flips. Customers stay because they have no real alternative (high CLTV). Word of mouth does your marketing (low CAC). You have breathing room to build, iterate, and make mistakes without the market punishing you immediately.
-  </p>
-  <p>
-    This is not a guarantee of success. But it's the difference between climbing a mountain with a headwind and climbing with a tailwind. Same mountain. Very different experience.
-  </p>
+    <h2>Every great startup is built on one thing that will always be true about its customer</h2>
 
-  <h2>The real hierarchy: what to prioritize when you can't get everything right at once</h2>
+    <p>Call it an enduring truth — one thing about human behavior or human need that won't change regardless of technology, market cycles, or who's in the White House. The best companies don't chase trends. They find this truth and build their entire business around it.</p>
+    <p>Take Amazon. It started as an internet bookstore and has since expanded into cloud infrastructure, grocery, streaming, and a dozen other verticals. But its core has never shifted: <strong>a customer will always want to pay as little as possible, and receive their order as fast as possible.</strong> Every Amazon innovation — Prime, Fulfillment by Amazon, AWS — flows from that single truth. The enduring truth isn't a mission statement. It's a constraint the entire business optimizes against.</p>
+    <p>Google is the same. Sergey Brin and Larry Page built a search engine. Since then, they've built maps, a browser, an operating system, self-driving cars, and a life sciences division. But the thread running through all of it: <strong>people will always want to find information faster, more accurately, and with less friction than before.</strong></p>
+    <p>Without an enduring truth at the core, you're building for a moment rather than for the long run. Moments pass. Truths don't.</p>
 
-  <p>
-    In an ideal world, every startup nails all three — market, people, product — from day one. In the real world, most startups get at most two of them right early on. The question is: which two? And what can you recover from?
-  </p>
+    <h2>Market beats everything. Here's why.</h2>
 
-  <table class="decision-table">
-    <thead>
-      <tr>
-        <th>Market</th>
-        <th>Team</th>
-        <th>Product</th>
-        <th>Verdict</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="bad">Bad</span></td>
-        <td><span class="great">Great</span></td>
-        <td><span class="great">Great</span></td>
-        <td class="verdict">Slow death. Even the best team and product can't manufacture demand that doesn't exist.</td>
-      </tr>
-      <tr>
-        <td><span class="great">Great</span></td>
-        <td><span class="great">Great</span></td>
-        <td><span class="bad">Bad</span></td>
-        <td class="verdict">Survivable. Great market + great team = time to pivot. Instagram, Slack, and Pinterest all started here.</td>
-      </tr>
-      <tr>
-        <td><span class="great">Great</span></td>
-        <td><span class="bad">Bad</span></td>
-        <td><span class="great">Great</span></td>
-        <td class="verdict">Fixable. Product-market fit is the rarest thing — if you have it, you can hire your way out of a weak team.</td>
-      </tr>
-      <tr>
-        <td><span class="great">Great</span></td>
-        <td><span class="great">Great</span></td>
-        <td><span class="great">Great</span></td>
-        <td class="verdict">Go build it. Now.</td>
-      </tr>
-    </tbody>
-  </table>
+    <blockquote>
+      <p>"Great markets make great companies."</p>
+      <div class="attribution">— Don Valentine, Founder, Sequoia Capital</div>
+    </blockquote>
+    <div class="reaction">I'd go further: a great market is forgiving. It gives you time and space to fix everything else.</div>
 
-  <p>
-    Willbur Labs surveyed 150 founders and found that over half had to pivot — and of those who did, three-quarters saw success afterward. The pivot is not a failure mode. It's a feature. The market gives you enough runway to discover that you built the wrong thing and course-correct. But only if the market is right.
-  </p>
+    <p>Of all the variables in a startup's success, market is the hardest to recover from if you get it wrong. Peter Thiel puts it bluntly in <em>Zero to One</em>: the most successful companies are monopolies. Competition, as he sees it, is for losers. Harsh — but structurally correct.</p>
+    <p>Here's the economic reality. In any business, you need the money you make from a customer over their lifetime to exceed what you spent acquiring them:</p>
 
-  <h2>People: the one variable that compounds</h2>
+    <div class="formula-box">
+      <div class="formula">CLTV − CAC = Profit per customer</div>
+      <div class="note">CLTV &gt; CAC = you have a business. &nbsp;CLTV &lt; CAC = you have an expensive hobby.</div>
+    </div>
 
-  <blockquote>
-    <p>"The only thing that matters is getting to product-market fit."</p>
-    <div class="attribution">— Marc Andreessen, Co-founder, Andreessen Horowitz</div>
-  </blockquote>
-  <div class="reaction">True — but once you have it, the only thing that matters is having people smart enough not to lose it.</div>
+    <p>In a crowded market, this equation gets ugly fast. Customers have choices, so they leave easily (low CLTV). You need to spend heavily on sales and marketing just to be noticed (high CAC). One slip and your users are gone.</p>
 
-  <p>
-    If you find yourself with product-market fit and a team that isn't quite right, there's good news: it's far easier to replace a person than it is to find product-market fit. Great hires are hard. Product-market fit is rarer than great hires.
-  </p>
-  <p>
-    But here's the nuance: experience is overrated. <strong>Intelligence and passion beat domain expertise, especially in early-stage startups.</strong> Here's why. Disruptive startups are almost by definition tackling problems that haven't been solved before — which means there's no "expert" playbook to follow. What you need are people who can look at a novel problem from multiple angles (intelligence) and who won't give up when the obvious approaches don't work (passion). Domain experience can be hired or learned. The other two cannot.
-  </p>
-  <p>
-    The best teams also share one more trait: they build fast feedback loops. They talk to customers obsessively, identify flaws in their product early, and treat a bad product as a problem to be solved rather than a signal to give up. Speed of learning matters more than speed of building.
-  </p>
+    <blockquote>
+      <p>"When an industry with a reputation for difficult economics meets a manager with a reputation for excellence, it is usually the industry that keeps its reputation intact."</p>
+      <div class="attribution">— Warren Buffett</div>
+    </blockquote>
+    <div class="reaction">A bad market will defeat a good team almost every time. Don't fight the market. Pick a better one.</div>
 
-  <h2 class="closing">So — what makes a startup succeed?</h2>
+    <h2>The real hierarchy: what to prioritize when you can't get everything right at once</h2>
 
-  <p>
-    Not luck. Not a genius founder working eighteen-hour days. Not even a brilliant idea.
-  </p>
-  <p>
-    It's finding one thing that will always be true about people — and building a business around that truth, in a market that gives you room to breathe, with a team smart enough to know when they're wrong.
-  </p>
-  <p>
-    Get those three things right, and you haven't guaranteed success. But you've earned the right to find out.
-  </p>
+    <table class="decision-table">
+      <thead>
+        <tr><th>Market</th><th>Team</th><th>Product</th><th>Verdict</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="bad">Bad</span></td>
+          <td><span class="great">Great</span></td>
+          <td><span class="great">Great</span></td>
+          <td class="verdict">Slow death. Even the best team can't manufacture demand that doesn't exist.</td>
+        </tr>
+        <tr>
+          <td><span class="great">Great</span></td>
+          <td><span class="great">Great</span></td>
+          <td><span class="bad">Bad</span></td>
+          <td class="verdict">Survivable. Great market + great team = time to pivot. Instagram, Slack, Pinterest all started here.</td>
+        </tr>
+        <tr>
+          <td><span class="great">Great</span></td>
+          <td><span class="bad">Bad</span></td>
+          <td><span class="great">Great</span></td>
+          <td class="verdict">Fixable. Product-market fit is the rarest thing — if you have it, you can hire your way out.</td>
+        </tr>
+        <tr>
+          <td><span class="great">Great</span></td>
+          <td><span class="great">Great</span></td>
+          <td><span class="great">Great</span></td>
+          <td class="verdict">Go build it. Now.</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <div class="byline">Anmol Khandeparkar · 2023</div>
+    <h2>People: the one variable that compounds</h2>
+
+    <blockquote>
+      <p>"The only thing that matters is getting to product-market fit."</p>
+      <div class="attribution">— Marc Andreessen, Co-founder, Andreessen Horowitz</div>
+    </blockquote>
+    <div class="reaction">True — but once you have it, the only thing that matters is having people smart enough not to lose it.</div>
+
+    <p>If you find yourself with product-market fit and a team that isn't quite right, there's good news: it's far easier to replace a person than it is to find product-market fit. Great hires are hard. Product-market fit is rarer than great hires.</p>
+    <p>But here's the nuance: experience is overrated. <strong>Intelligence and passion beat domain expertise, especially in early-stage startups.</strong> Disruptive startups tackle problems that haven't been solved before — which means there's no expert playbook. What you need are people who can look at a novel problem from multiple angles and who won't give up when the obvious approaches don't work.</p>
+
+    <h2 class="closing">So — what makes a startup succeed?</h2>
+
+    <p>Not luck. Not a genius founder. Not even a brilliant idea.</p>
+    <p>It's finding one thing that will always be true about people — and building a business around that truth, in a market that gives you room to breathe, with a team smart enough to know when they're wrong.</p>
+    <p>Get those three things right, and you haven't guaranteed success. But you've earned the right to find out.</p>
+
+    <div class="byline">Anmol Khandeparkar · 2023</div>
+  </div>
+
+  <div class="file-footer">
+    <span>CLEARANCE LEVEL: PUBLIC</span>
+    <span>anmolkhandeparkar.com</span>
+  </div>
 
 </article>
 </body>
