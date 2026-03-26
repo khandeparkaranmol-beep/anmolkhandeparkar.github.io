@@ -115,13 +115,15 @@ h1 {
   line-height: 1.7;
 }
 h2 {
-  font-family: var(--pixel);
-  font-size: 7px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
   color: var(--green);
-  letter-spacing: 2px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 44px 0 16px;
-  line-height: 1.8;
+  line-height: 1.6;
+  display: block;
 }
 p { margin-bottom: 20px; color: var(--text); }
 p:last-child { margin-bottom: 0; }
@@ -130,30 +132,30 @@ blockquote {
   margin: 28px 0;
   padding: 20px 24px;
   border-left: 3px solid var(--green);
-  background: var(--green-dim);
+  background: var(--panel2);
 }
 blockquote p {
   font-size: 13px;
   font-style: italic;
-  color: var(--text);
+  color: var(--muted2);
   margin-bottom: 8px;
 }
 blockquote .attribution {
   font-family: var(--pixel);
   font-size: 6px;
-  color: var(--muted2);
+  color: var(--muted);
   letter-spacing: 1px;
   font-style: normal;
 }
 .reaction {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--amber);
+  color: var(--muted2);
   font-style: italic;
   margin-top: -16px;
   margin-bottom: 20px;
   padding-left: 27px;
-  border-left: 3px solid var(--amber);
+  border-left: 3px solid var(--border2);
   line-height: 1.7;
 }
 
@@ -191,17 +193,17 @@ blockquote .attribution {
 .formula-box {
   background: var(--panel2);
   border: 1px solid var(--border2);
-  border-left: 3px solid var(--amber);
+  border: 1px solid var(--border);
   padding: 20px 24px;
   margin: 28px 0;
 }
 .formula-box .formula {
-  font-family: var(--pixel);
-  font-size: 8px;
-  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
   margin-bottom: 10px;
   line-height: 1.8;
-  letter-spacing: 1px;
 }
 .formula-box .note {
   font-family: var(--mono);
@@ -258,15 +260,14 @@ em { font-style: italic; color: var(--muted2); }
     <p class="subtitle">What actually makes a startup succeed — and why most answers to this question are useless.</p>
 
     <p>What makes a startup succeed?</p>
-    <p>It's the question every founder, investor, and ambitious twenty-something obsesses over. And most answers feel either too obvious to be useful ("great team, great product!") or too abstract to act on. So here's my attempt at something more useful — a framework built on a handful of principles that, in my view, give any startup a real leg up.</p>
+    <p>Most answers are either too obvious to be useful or too abstract to act on. Here's my attempt at something more useful — built on a handful of principles that give any startup a real leg up.</p>
     <p>It starts with something in shorter supply than capital, talent, or luck: truth.</p>
 
     <h2>Every great startup is built on one thing that will always be true about its customer</h2>
 
-    <p>Call it an enduring truth — one thing about human behavior or human need that won't change regardless of technology, market cycles, or who's in the White House. The best companies don't chase trends. They find this truth and build their entire business around it.</p>
-    <p>Take Amazon. It started as an internet bookstore and has since expanded into cloud infrastructure, grocery, streaming, and a dozen other verticals. But its core has never shifted: <strong>a customer will always want to pay as little as possible, and receive their order as fast as possible.</strong> Every Amazon innovation — Prime, Fulfillment by Amazon, AWS — flows from that single truth. The enduring truth isn't a mission statement. It's a constraint the entire business optimizes against.</p>
-    <p>Google is the same. Sergey Brin and Larry Page built a search engine. Since then, they've built maps, a browser, an operating system, self-driving cars, and a life sciences division. But the thread running through all of it: <strong>people will always want to find information faster, more accurately, and with less friction than before.</strong></p>
-    <p>Without an enduring truth at the core, you're building for a moment rather than for the long run. Moments pass. Truths don't.</p>
+    <p>Call it an enduring truth — one thing about human behavior that won't change regardless of technology, market cycles, or who's in the White House. The best companies don't chase trends. They find this truth and build everything around it.</p>
+    <p>Take Amazon. It started as a bookstore and expanded into cloud, grocery, streaming, and a dozen other verticals. But its core has never shifted: <strong>a customer will always want to pay as little as possible and receive their order as fast as possible.</strong> Every Amazon innovation flows from that single constraint. That's not a mission statement. That's a forcing function.</p>
+    <p>Without an enduring truth at the core, you're building for a moment. Moments pass. Truths don't.</p>
 
     <h2>Market beats everything. Here's why.</h2>
 
@@ -274,17 +275,14 @@ em { font-style: italic; color: var(--muted2); }
       <p>"Great markets make great companies."</p>
       <div class="attribution">— Don Valentine, Founder, Sequoia Capital</div>
     </blockquote>
-    <div class="reaction">I'd go further: a great market is forgiving. It gives you time and space to fix everything else.</div>
+    <div class="reaction">A great market is forgiving. It gives you time to fix everything else.</div>
 
-    <p>Of all the variables in a startup's success, market is the hardest to recover from if you get it wrong. Peter Thiel puts it bluntly in <em>Zero to One</em>: the most successful companies are monopolies. Competition, as he sees it, is for losers. Harsh — but structurally correct.</p>
-    <p>Here's the economic reality. In any business, you need the money you make from a customer over their lifetime to exceed what you spent acquiring them:</p>
+    <p>Market is the hardest variable to recover from if you get it wrong. The economics are simple:</p>
 
     <div class="formula-box">
       <div class="formula">CLTV − CAC = Profit per customer</div>
-      <div class="note">CLTV &gt; CAC = you have a business. &nbsp;CLTV &lt; CAC = you have an expensive hobby.</div>
+      <div class="note">Bad markets crush both sides of this equation simultaneously. Good markets protect both.</div>
     </div>
-
-    <p>In a crowded market, this equation gets ugly fast. Customers have choices, so they leave easily (low CLTV). You need to spend heavily on sales and marketing just to be noticed (high CAC). One slip and your users are gone.</p>
 
     <blockquote>
       <p>"When an industry with a reputation for difficult economics meets a manager with a reputation for excellence, it is usually the industry that keeps its reputation intact."</p>
@@ -292,7 +290,7 @@ em { font-style: italic; color: var(--muted2); }
     </blockquote>
     <div class="reaction">A bad market will defeat a good team almost every time. Don't fight the market. Pick a better one.</div>
 
-    <h2>The real hierarchy: what to prioritize when you can't get everything right at once</h2>
+    <h2>What you can recover from — and what you can't</h2>
 
     <table class="decision-table">
       <thead>
@@ -303,19 +301,19 @@ em { font-style: italic; color: var(--muted2); }
           <td><span class="bad">Bad</span></td>
           <td><span class="great">Great</span></td>
           <td><span class="great">Great</span></td>
-          <td class="verdict">Slow death. Even the best team can't manufacture demand that doesn't exist.</td>
+          <td class="verdict">Slow death. You can't manufacture demand that doesn't exist.</td>
         </tr>
         <tr>
           <td><span class="great">Great</span></td>
           <td><span class="great">Great</span></td>
           <td><span class="bad">Bad</span></td>
-          <td class="verdict">Survivable. Great market + great team = time to pivot. Instagram, Slack, Pinterest all started here.</td>
+          <td class="verdict">Survivable. Instagram, Slack, Pinterest all started here.</td>
         </tr>
         <tr>
           <td><span class="great">Great</span></td>
           <td><span class="bad">Bad</span></td>
           <td><span class="great">Great</span></td>
-          <td class="verdict">Fixable. Product-market fit is the rarest thing — if you have it, you can hire your way out.</td>
+          <td class="verdict">Fixable. Product-market fit is the rarest thing — if you have it, hire your way out.</td>
         </tr>
         <tr>
           <td><span class="great">Great</span></td>
@@ -332,10 +330,10 @@ em { font-style: italic; color: var(--muted2); }
       <p>"The only thing that matters is getting to product-market fit."</p>
       <div class="attribution">— Marc Andreessen, Co-founder, Andreessen Horowitz</div>
     </blockquote>
-    <div class="reaction">True — but once you have it, the only thing that matters is having people smart enough not to lose it.</div>
+    <div class="reaction">True. And once you have it, the only thing that matters is having people smart enough not to lose it.</div>
 
-    <p>If you find yourself with product-market fit and a team that isn't quite right, there's good news: it's far easier to replace a person than it is to find product-market fit. Great hires are hard. Product-market fit is rarer than great hires.</p>
-    <p>But here's the nuance: experience is overrated. <strong>Intelligence and passion beat domain expertise, especially in early-stage startups.</strong> Disruptive startups tackle problems that haven't been solved before — which means there's no expert playbook. What you need are people who can look at a novel problem from multiple angles and who won't give up when the obvious approaches don't work.</p>
+    <p>Experience is overrated. Intelligence and passion beat domain expertise in early-stage startups — because disruptive companies tackle problems that haven't been solved before. There's no expert playbook. You need people who can reason from first principles and won't quit when the obvious approaches fail.</p>
+    <p>Domain expertise can be hired. The other two cannot.</p>
 
     <h2 class="closing">So — what makes a startup succeed?</h2>
 
