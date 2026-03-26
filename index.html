@@ -826,7 +826,7 @@ footer {
         </div>
 
         <div class="hero-ctas">
-          <a href="/cdn-cgi/l/email-protection#4a21222b242e2f3a2b38212b382b242725260a2d272b232664292527" class="btn btn-primary">▶ Hire Me</a>
+          <a href="mailto:khandeparkaranmol@gmail.com" class="btn btn-primary">▶ Hire Me</a>
           <a href="#builds" class="btn btn-ghost">[ See Builds ]</a>
           <a href="https://www.linkedin.com/in/anmol-khandeparkar/" target="_blank" class="btn btn-ghost">[ LinkedIn ]</a>
         </div>
@@ -1137,7 +1137,7 @@ footer {
       I respond fast. I'm not a bot. (Probably.)
     </p>
     <div class="contact-btns">
-      <a href="/cdn-cgi/l/email-protection#99f2f1f8f7fdfce9f8ebf2f8ebf8f7f4f6f5d9fef4f8f0f5b7faf6f4" class="btn btn-primary">▶ Email Me</a>
+      <a href="mailto:khandeparkaranmol@gmail.com" class="btn btn-primary">▶ Email Me</a>
       <a href="https://www.linkedin.com/in/anmol-khandeparkar/" target="_blank" class="btn btn-ghost">[ LinkedIn ]</a>
       <a href="https://github.com/anmolkhandeparkar" target="_blank" class="btn btn-ghost">[ GitHub ]</a>
     </div>
@@ -1151,7 +1151,7 @@ footer {
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── Custom cursor ──
 const dot = document.getElementById('dot');
 const ring = document.getElementById('ring');
@@ -1175,32 +1175,35 @@ window.addEventListener('scroll', () => {
 const bootEl = document.getElementById('boot');
 const bootLines = document.getElementById('boot-lines');
 const lines = [
-  { text: '> ANMOL.EXE v2.0 — INITIALIZING...', cls: 'dim', delay: 0 },
-  { text: '> Loading player data...', cls: 'dim', delay: 400 },
-  { text: '> ML skills: <span style="color:var(--green)">LOADED ✓</span>', delay: 750 },
-  { text: '> Product instincts: <span style="color:var(--green)">LOADED ✓</span>', delay: 1050 },
-  { text: '> Caffeine levels: <span style="color:var(--amber)">CRITICAL ⚠</span>', delay: 1350 },
-  { text: '> Side projects: <span style="color:var(--green)">3 ACTIVE</span>', delay: 1650 },
-  { text: '> Former life: <span style="color:var(--blue)">VR GAME DEV (12 COUNTRIES)</span>', delay: 1650 },
-  { text: '> Current mission: <span style="color:var(--green)">GOLDMAN SACHS — ACTIVE</span>', delay: 1950 },
-  { text: '> Hackathon record: <span style="color:var(--amber)">2x FIRST PLACE 🏆</span>', delay: 2250 },
-  { text: '', delay: 2550 },
-  { text: '<span style="color:#fff;font-weight:700">&gt; WELCOME, RECRUITER. </span>', delay: 2700 },
+  { text: '> ANMOL.EXE v2.0 — INITIALIZING...', cls: 'dim' },
+  { text: '> Loading player data...', cls: 'dim' },
+  { text: '> ML skills: <span style="color:var(--green)">LOADED ✓</span>' },
+  { text: '> Product instincts: <span style="color:var(--green)">LOADED ✓</span>' },
+  { text: '> Caffeine levels: <span style="color:var(--amber)">CRITICAL ⚠</span>' },
+  { text: '> Side projects: <span style="color:var(--green)">3 ACTIVE</span>' },
+  { text: '> Former life: <span style="color:var(--blue)">VR GAME DEV (12 COUNTRIES)</span>' },
+  { text: '> Current mission: <span style="color:var(--green)">GOLDMAN SACHS — ACTIVE</span>' },
+  { text: '> Hackathon record: <span style="color:var(--amber)">2x FIRST PLACE 🏆</span>' },
+  { text: '&nbsp;' },
+  { text: '<span style="color:#fff;font-weight:700">&gt; WELCOME, RECRUITER.</span>' },
 ];
 let booted = false;
+let bootInterval = null;
 
 function skipBoot() {
   if (booted) return;
   booted = true;
+  if (bootInterval) clearInterval(bootInterval);
   bootEl.classList.add('hidden');
-  document.body.style.cursor = 'none';
   triggerBars();
 }
 
+bootLines.innerHTML = '';
 let lineIdx = 0;
-function showNextLine() {
+bootInterval = setInterval(() => {
   if (lineIdx >= lines.length) {
-    setTimeout(skipBoot, 700);
+    clearInterval(bootInterval);
+    setTimeout(skipBoot, 800);
     return;
   }
   const l = lines[lineIdx++];
@@ -1208,11 +1211,8 @@ function showNextLine() {
   if (l.cls) d.className = l.cls;
   d.innerHTML = l.text;
   bootLines.appendChild(d);
-  setTimeout(showNextLine, l.delay - (lines[lineIdx-2]?.delay || 0) + 200);
-}
+}, 280);
 
-bootLines.innerHTML = '';
-setTimeout(showNextLine, 100);
 document.addEventListener('keydown', skipBoot, { once: true });
 document.addEventListener('click', skipBoot, { once: true });
 
@@ -1260,4 +1260,15 @@ const sectObs = new IntersectionObserver(entries => {
       const ach = achievements.find(a => a.section === id);
       if (ach && !shownAch.has(id)) {
         shownAch.add(id);
-        setTimeout(() => 
+        setTimeout(() => showToast(ach.msg), 600);
+      }
+    }
+  });
+}, { threshold: 0.3 });
+achievements.forEach(a => {
+  const el = document.getElementById(a.section);
+  if (el) sectObs.observe(el);
+});
+</script>
+</body>
+</html>
