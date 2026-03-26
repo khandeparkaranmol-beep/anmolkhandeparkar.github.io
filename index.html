@@ -44,29 +44,12 @@ body {
 }
 
 /* Custom cursor */
-.cursor-dot {
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  transition: transform 0.1s;
-  transform: translate(-50%, -50%);
+.cursor-dot { display: none; }
+.cursor-ring { display: none; }
+body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpolygon points='0,0 0,12 3,9 5,14 7,13 5,8 9,8' fill='%2300ff88' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") 0 0, auto;
 }
-.cursor-ring {
-  width: 28px; height: 28px;
-  border: 1px solid var(--green);
-  border-radius: 50%;
-  position: fixed;
-  pointer-events: none;
-  z-index: 9998;
-  transition: transform 0.15s, width 0.2s, height 0.2s, opacity 0.2s;
-  transform: translate(-50%, -50%);
-  opacity: 0.5;
-}
-body:has(a:hover) .cursor-ring,
-body:has(button:hover) .cursor-ring { width: 44px; height: 44px; opacity: 0.8; }
+a, button { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 16 16'%3E%3Cpolygon points='0,0 0,12 3,9 5,14 7,13 5,8 9,8' fill='%2300ff88' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") 0 0, pointer; }
 
 /* Scanlines */
 body::before {
@@ -762,8 +745,6 @@ footer {
 </head>
 <body>
 
-<div class="cursor-dot" id="dot"></div>
-<div class="cursor-ring" id="ring"></div>
 <div class="grid-bg"></div>
 <div id="xp-bar"></div>
 
@@ -787,8 +768,9 @@ footer {
   <ul class="nav-links">
     <li><a href="#builds">Builds</a></li>
     <li><a href="#quests">Quests</a></li>
+    <li><a href="#education">Education</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#codex">Codex</a></li>
+    <li><a href="#codex">Intel</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -836,7 +818,7 @@ footer {
       <div class="char-card">
         <div class="char-header">
           <span class="char-class">AI TECH PM</span>
-          <span class="char-lvl">LVL 07</span>
+          <span class="char-lvl">LVL 31</span>
         </div>
         <div class="char-portrait">🧠</div>
         <div class="char-stats">
@@ -849,14 +831,14 @@ footer {
           </div>
           <div class="stat-row">
             <div class="stat-meta">
-              <span class="stat-name">ML ENGINEERING</span>
+              <span class="stat-name">ML / DATA SCIENCE</span>
               <span class="stat-num" style="color:var(--blue)">85</span>
             </div>
             <div class="stat-bar"><div class="stat-fill f-blue" data-w="85"></div></div>
           </div>
           <div class="stat-row">
             <div class="stat-meta">
-              <span class="stat-name">FINTECH DOMAIN</span>
+              <span class="stat-name">TABS OPEN AT 2AM</span>
               <span class="stat-num" style="color:var(--amber)">91</span>
             </div>
             <div class="stat-bar"><div class="stat-fill f-amber" data-w="91"></div></div>
@@ -876,6 +858,8 @@ footer {
           <span class="ctag ctag-b">GS PM</span>
           <span class="ctag ctag-g">VR VETERAN</span>
           <span class="ctag ctag-a">2x HACK 1ST</span>
+          <span class="ctag ctag-b">DATA SCIENCE</span>
+          <span class="ctag ctag-p">CS GRAD</span>
         </div>
       </div>
     </div>
@@ -888,65 +872,14 @@ footer {
     <div class="section-head reveal"><h2>◆ Active Builds</h2></div>
     <div class="projects-grid reveal" style="grid-template-columns: repeat(2,1fr);">
 
-      <a class="proj-card legendary" href="#" target="_blank">
-        <div class="proj-top">
-          <div class="proj-icon">📉</div>
-          <span class="proj-rarity r-legendary">LEGENDARY</span>
-        </div>
-        <div class="proj-body">
-          <div class="proj-name">OPPORTUNUS</div>
-          <p class="proj-desc">Multi-agent Amazon price drop predictor. 4 specialized AI agents coordinated by a dynamic orchestrator — parallel execution, conditional re-routing, walk-forward cross-validation. Cuts research from hours to seconds. Alerts you <em>before</em> the sale drops.</p>
-          <div class="proj-tags">
-            <span class="ptag">Next.js</span>
-            <span class="ptag">Claude API</span>
-            <span class="ptag">TypeScript</span>
-            <span class="ptag">Supabase</span>
-            <span class="ptag">Multi-Agent</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="proj-card epic" href="#" target="_blank">
-        <div class="proj-top">
-          <div class="proj-icon">🏛️</div>
-          <span class="proj-rarity r-epic">EPIC</span>
-        </div>
-        <div class="proj-body">
-          <div class="proj-name">MEMOPALACE</div>
-          <p class="proj-desc">3D spatial memory palace powered by the Claude API. Drop concepts into a navigable 3D world — your brain remembers what your notes forget. Built with A-Frame + spatial AI. Demo-able in under 30 seconds.</p>
-          <div class="proj-tags">
-            <span class="ptag">A-Frame</span>
-            <span class="ptag">Claude API</span>
-            <span class="ptag">WebXR</span>
-            <span class="ptag">Spatial AI</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="proj-card rare" href="ai-fund-matcher.html" target="_blank">
-        <div class="proj-top">
-          <div class="proj-icon">💰</div>
-          <span class="proj-rarity r-rare">RARE</span>
-        </div>
-        <div class="proj-body">
-          <div class="proj-name">AI PE FUND MATCHER</div>
-          <p class="proj-desc">End-to-end deal sourcing platform. 5-stage pipeline: web scraping → Claude API integration → hybrid matching algorithm. Cuts PE fund research from 4 hours to 18 seconds. 95% accuracy at $0.33 vs $400 cost.</p>
-          <div class="proj-tags">
-            <span class="ptag">Python</span>
-            <span class="ptag">Jina AI</span>
-            <span class="ptag">Claude API</span>
-            <span class="ptag">FinTech</span>
-          </div>
-          <div style="margin-top:12px;">
-            <a href="https://bitbucket.org/tinkerer2493/ai_pe_fund_matcher/src/main/" target="_blank" onclick="event.stopPropagation();" style="font-family:var(--mono);font-size:9px;color:var(--amber);border:1px solid var(--amber);padding:4px 10px;text-decoration:none;display:inline-block;transition:background 0.15s;" onmouseover="this.style.background='var(--amber-dim)';" onmouseout="this.style.background='transparent';">[ Bitbucket → ]</a>
-          </div>
-        </div>
-      </a>
-
-      <a class="proj-card rare" href="the-mole.html" target="_blank" style="border-color:var(--amber);">
+      <!-- #1 THE MOLE — LEGENDARY -->
+      <a class="proj-card legendary" href="the-mole.html" target="_blank">
         <div class="proj-top">
           <div class="proj-icon">🕵️</div>
-          <span class="proj-rarity r-rare">RARE · iOS</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span class="proj-rarity r-legendary">LEGENDARY</span>
+            <span style="font-family:var(--pixel);font-size:5px;color:var(--green);border:1px solid var(--green);padding:3px 7px;letter-spacing:1px;">✓ SHIPPED</span>
+          </div>
         </div>
         <div class="proj-body">
           <div class="proj-name">THE MOLE</div>
@@ -960,6 +893,71 @@ footer {
           </div>
         </div>
       </a>
+
+      <!-- #2 AI PE FUND MATCHER — EPIC -->
+      <div class="proj-card epic" onclick="window.open('ai-fund-matcher.html')" style="cursor:pointer;">
+        <div class="proj-top">
+          <div class="proj-icon">💰</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span class="proj-rarity r-epic">EPIC</span>
+            <span style="font-family:var(--pixel);font-size:5px;color:var(--green);border:1px solid var(--green);padding:3px 7px;letter-spacing:1px;">✓ SHIPPED</span>
+          </div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-name">AI PE FUND MATCHER</div>
+          <p class="proj-desc">End-to-end deal sourcing platform. 5-stage pipeline: web scraping → Claude API → hybrid matching algorithm. Cuts PE fund research from 4 hours to 18 seconds. 95% accuracy at $0.33 vs $400 cost.</p>
+          <div class="proj-tags">
+            <span class="ptag">Python</span>
+            <span class="ptag">Jina AI</span>
+            <span class="ptag">Claude API</span>
+            <span class="ptag">FinTech</span>
+            <a href="https://bitbucket.org/tinkerer2493/ai_pe_fund_matcher/src/main/" target="_blank" onclick="event.stopPropagation();" class="ptag" style="color:var(--purple);border-color:var(--purple);text-decoration:none;">Bitbucket ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- #3 OPPORTUNUS — IN PROGRESS -->
+      <a class="proj-card rare" href="#" target="_blank">
+        <div class="proj-top">
+          <div class="proj-icon">📉</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span class="proj-rarity r-rare">RARE</span>
+            <span style="font-family:var(--pixel);font-size:5px;color:var(--amber);border:1px solid var(--amber);padding:3px 7px;letter-spacing:1px;animation:pulse-border 2s ease-in-out infinite;">⚙ IN PROGRESS</span>
+          </div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-name">OPPORTUNUS</div>
+          <p class="proj-desc">Multi-agent Amazon price drop predictor. 4 specialized AI agents coordinated by a dynamic orchestrator — parallel execution, conditional re-routing, walk-forward cross-validation. Alerts you <em>before</em> the sale drops.</p>
+          <div class="proj-tags">
+            <span class="ptag">Next.js</span>
+            <span class="ptag">Claude API</span>
+            <span class="ptag">TypeScript</span>
+            <span class="ptag">Supabase</span>
+            <span class="ptag">Multi-Agent</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- #4 MEMOPALACE — UPCOMING -->
+      <div class="proj-card" style="border-color:var(--muted);opacity:0.7;cursor:default;">
+        <div class="proj-top">
+          <div class="proj-icon" style="filter:grayscale(0.5);">🏛️</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span style="font-family:var(--pixel);font-size:5px;color:var(--muted);border:1px solid var(--muted);padding:3px 7px;letter-spacing:1px;">COMMON</span>
+            <span style="font-family:var(--pixel);font-size:5px;color:var(--muted2);border:1px solid var(--muted);padding:3px 7px;letter-spacing:1px;">⏳ UPCOMING</span>
+          </div>
+        </div>
+        <div class="proj-body">
+          <div class="proj-name" style="color:var(--muted2);">MEMOPALACE</div>
+          <p class="proj-desc">3D spatial memory palace powered by the Claude API. Drop concepts into a navigable 3D world — your brain remembers what your notes forget. Built with A-Frame + spatial AI.</p>
+          <div class="proj-tags">
+            <span class="ptag">A-Frame</span>
+            <span class="ptag">Claude API</span>
+            <span class="ptag">WebXR</span>
+            <span class="ptag">Spatial AI</span>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -1003,6 +1001,21 @@ footer {
       </div>
 
       <div class="quest-item">
+        <div class="quest-period">JAN<br>MAY 2019</div>
+        <div>
+          <div class="quest-role">Graduate Research Assistant</div>
+          <div class="quest-org">SIMULATIONS & GAME APPLICATIONS LAB — UT AUSTIN CS</div>
+          <ul class="quest-desc">
+            <li>Built UI and refactored codebase for <strong>Environ</strong> — an educational game casting players as global decision makers. Reduced game size by 37% with zero performance loss.</li>
+            <li>Published Environ to the Mac App Store. Featured in the Austin Chronicle.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <span class="q-status q-done">✓ COMPLETE</span>
+        </div>
+      </div>
+
+      <div class="quest-item">
         <div class="quest-period">JUN<br>AUG 2019</div>
         <div>
           <div class="quest-role">Software PM Intern</div>
@@ -1025,6 +1038,60 @@ footer {
           <ul class="quest-desc">
             <li>Built 2 VR games for Google Daydream end-to-end (Blender + Unity 3D). Downloaded in 12 countries. 4.1★ on Google Play.</li>
             <li>Origin story: this is where the love for building started.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <span class="q-status q-done">✓ COMPLETE</span>
+        </div>
+      </div>
+
+      <div class="quest-item">
+        <div class="quest-period">AUG<br>APR 2016</div>
+        <div>
+          <div class="quest-role">Associate Decision Scientist</div>
+          <div class="quest-org">MU SIGMA — $1.5B MANAGEMENT CONSULTING</div>
+          <ul class="quest-desc">
+            <li>Devised a BAU framework for a Fortune 200 Retail Giant to analyze 200+ monthly online ad campaigns — $1.3M in profits.</li>
+            <li>Statistical A/B analysis in Python, SKU performance tracking, monthly insights to Category Managers.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <span class="q-status q-done">✓ COMPLETE</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section id="education" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal"><h2>◆ Training Arc</h2></div>
+    <div class="quest-log reveal">
+
+      <div class="quest-item">
+        <div class="quest-period">2019<br>2021</div>
+        <div>
+          <div class="quest-role">M.S. Computer and Information Science</div>
+          <div class="quest-org">THE UNIVERSITY OF TEXAS AT AUSTIN — TOP 10 PUBLIC UNIVERSITY</div>
+          <ul class="quest-desc">
+            <li>Focus: Human Computer Interaction · GPA: <strong>3.94 / 4.0</strong> — Top 2% of graduating class.</li>
+            <li>Graduate Research Assistant at the Simulations & Game Applications Lab, CS Department.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <span class="q-status q-done">✓ COMPLETE</span>
+        </div>
+      </div>
+
+      <div class="quest-item">
+        <div class="quest-period">2011<br>2015</div>
+        <div>
+          <div class="quest-role">B.Tech. Computer Science</div>
+          <div class="quest-org">NARSEE MONJEE INSTITUTE — MUMBAI, INDIA</div>
+          <ul class="quest-desc">
+            <li>Bachelor of Technology in Computer Science. Where the engineering foundation was laid.</li>
           </ul>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
@@ -1056,26 +1123,26 @@ footer {
       <div class="skill-tile" data-level="A">
         <span class="s-icon">🗄️</span><span class="s-name">Vector DBs</span>
       </div>
-      <div class="skill-tile" data-level="A">
+      <div class="skill-tile" data-level="S">
         <span class="s-icon">🧮</span><span class="s-name">ML Modeling</span>
       </div>
-      <div class="skill-tile" data-level="B">
+      <div class="skill-tile" data-level="S">
+        <span class="s-icon">📊</span><span class="s-name">Data Science</span>
+      </div>
+      <div class="skill-tile" data-level="S">
+        <span class="s-icon">💾</span><span class="s-name">SQL</span>
+      </div>
+      <div class="skill-tile" data-level="A">
         <span class="s-icon">🌐</span><span class="s-name">A-Frame / 3D</span>
       </div>
       <div class="skill-tile" data-level="A">
         <span class="s-icon">⚡</span><span class="s-name">Agentic AI</span>
       </div>
       <div class="skill-tile" data-level="S">
-        <span class="s-icon">🏦</span><span class="s-name">FinTech Domain</span>
-      </div>
-      <div class="skill-tile" data-level="S">
         <span class="s-icon">🗺️</span><span class="s-name">Roadmapping</span>
       </div>
       <div class="skill-tile" data-level="S">
         <span class="s-icon">📝</span><span class="s-name">PRD Writing</span>
-      </div>
-      <div class="skill-tile" data-level="A">
-        <span class="s-icon">📊</span><span class="s-name">Data Analysis</span>
       </div>
     </div>
     <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:16px;text-align:right;">
@@ -1087,7 +1154,7 @@ footer {
 <!-- ── CODEX ── -->
 <section id="codex">
   <div class="wrap">
-    <div class="section-head reveal"><h2>◆ Codex — Field Notes</h2></div>
+    <div class="section-head reveal"><h2>◆ Intel</h2></div>
     <div class="codex-list reveal">
       <a class="codex-item" href="enigma-of-the-valley.html" target="_blank">
         <div>
@@ -1123,7 +1190,7 @@ footer {
       </a>
     </div>
     <div style="text-align:right;margin-top:16px;">
-      <a href="https://anmolkhandeparkar.com" target="_blank" class="btn btn-ghost" style="font-size:7px;">[ Full Codex → ]</a>
+      <a href="https://anmolkhandeparkar.com" target="_blank" class="btn btn-ghost" style="font-size:7px;">[ Full Intel → ]</a>
     </div>
   </div>
 </section>
@@ -1152,19 +1219,6 @@ footer {
 </footer>
 
 <script>
-// ── Custom cursor ──
-const dot = document.getElementById('dot');
-const ring = document.getElementById('ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function loop() {
-  rx += (mx - rx) * 0.18;
-  ry += (my - ry) * 0.18;
-  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(loop);
-})();
-
 // ── XP scroll bar ──
 window.addEventListener('scroll', () => {
   const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
@@ -1181,7 +1235,7 @@ const lines = [
   { text: '> Product instincts: <span style="color:var(--green)">LOADED ✓</span>' },
   { text: '> Caffeine levels: <span style="color:var(--amber)">CRITICAL ⚠</span>' },
   { text: '> Side projects: <span style="color:var(--green)">3 ACTIVE</span>' },
-  { text: '> Former life: <span style="color:var(--blue)">VR GAME DEV (12 COUNTRIES)</span>' },
+  { text: '> Former life: <span style="color:var(--blue)">PEAK GAMING ERA. NO REGRETS.</span>' },
   { text: '> Current mission: <span style="color:var(--green)">GOLDMAN SACHS — ACTIVE</span>' },
   { text: '> Hackathon record: <span style="color:var(--amber)">2x FIRST PLACE 🏆</span>' },
   { text: '&nbsp;' },
@@ -1240,7 +1294,7 @@ const achievements = [
   { section: 'builds', msg: 'Build Scout — You found the projects!' },
   { section: 'quests', msg: 'Lore Master — Reading the quest log!' },
   { section: 'skills', msg: 'Inventory Check — Eyeing the skill tree!' },
-  { section: 'codex', msg: 'Field Notes — Diving into the codex!' },
+  { section: 'codex', msg: 'Field Notes — Diving into the intel!' },
   { section: 'contact', msg: 'First Contact — Ready to reach out?' },
 ];
 const shownAch = new Set();
