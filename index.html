@@ -406,6 +406,13 @@ body::before {
 .quick-card-meta {
   font-size: 13px; color: var(--muted); margin-bottom: 6px;
 }
+.quick-card-highlight {
+  font-size: 13px; font-weight: 600; color: #6366f1;
+  padding: 8px 14px; margin-bottom: 8px; border-radius: 10px;
+  background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.12);
+  letter-spacing: 0.01em; line-height: 1.5;
+}
+[data-theme="dark"] .quick-card-highlight { background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2); }
 .quick-card-body {
   font-size: 14px; color: var(--text2); line-height: 1.55;
 }
@@ -700,7 +707,7 @@ section { padding: 100px 0; position: relative; }
         <button class="prompt-chip" data-type="quick" data-category="skills" data-query="What are Anmol's skills?">Skills</button>
         <button class="prompt-chip" data-type="quick" data-category="about" data-query="Tell me something about Anmol">About</button>
         <span class="prompt-sep"></span>
-        <button class="prompt-chip" data-type="api" data-query="Why should I hire Anmol for an AI PM role?">Why hire Anmol? →</button>
+        <button class="prompt-chip" data-type="quick" data-category="hire" data-query="Why should I hire Anmol?">Why hire Anmol? →</button>
       </div>
 
       <!-- Quick-answer cards (pre-built, no API) -->
@@ -959,8 +966,9 @@ window.anmol={
     { id: 'exp-civitas', section: 'experience', title: 'PM Intern at Civitas Learning (2019)', body: 'EdTech, $350M. Saved $140K by killing scaling investment in a $5M ARR product through business-case analysis presented to Head of Product.', tags: 'product,pm,data,analytics,education,user,research,impact,metric' },
     { id: 'exp-palindrome', section: 'experience', title: 'Software Engineer at PalindromeVR (2016–2018)', body: 'Shipped 2 VR titles end-to-end on Google Daydream. 4.1-star rating across 12 countries.', tags: 'engineer,gaming,vr,build,ship,google' },
     { id: 'exp-musigma', section: 'experience', title: 'Decision Scientist at Mu Sigma (2015–2016)', body: '$1.5B decision sciences firm. Built ad analytics framework for Fortune 200 retailer. 200+ campaigns/month, ~$1.3M profit impact.', tags: 'data,analytics,advertising,metric,impact' },
-    { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'HCI focus, 3.94 GPA, Top 2% of class.', tags: 'education,cs,hci,research,ux,ai,masters' },
-    { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Computer science foundation.', tags: 'education,cs,engineer,india' },
+    { id: 'exp-ut-gra', section: 'experience', title: 'Graduate Research Assistant — Simulations & Game Applications Lab, UT Austin (2019)', body: 'Built UI and refactored codebase for Environ, an educational game about global decision-making. Reduced game size by 37%. Published to the Mac App Store. Featured in the Austin Chronicle.', tags: 'experience,research,games,unity,ui,engineering,austin,ut' },
+    { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'Focus on Human-Computer Interaction. 3.94 GPA, Top 2% of class. B.Tech in CS plus a Master\'s in Computer Science — doesn\'t just write code, understands it.', tags: 'education,cs,hci,research,ux,ai,masters' },
+    { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: 'education,cs,engineer,india' },
     { id: 'skills-ai', section: 'skills', title: 'AI & ML Skills', body: 'LLM APIs, Agentic AI, Claude Code, Claude API, RAG, Eval Harnesses, ML Modeling.', tags: 'ai,ml,llm,agent,rag,data,pipeline,eval,claude' },
     { id: 'skills-eng', section: 'skills', title: 'Engineering Skills', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Data Science.', tags: 'engineer,python,swift,typescript,sql,data,build,supabase' },
     { id: 'skills-prod', section: 'skills', title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing.', tags: 'product,pm,strategy,user,research,ux,roadmap' }
@@ -1090,7 +1098,7 @@ window.anmol={
     if (!retrieved.length) return "Hmm, I don't have a great match for that. Try asking about AI, product management, what Anmol has built, or why you should hire him.";
     // Build a natural-sounding response from chunks
     if (query.toLowerCase().includes('hire')) {
-      return 'Here\'s the case: Anmol shipped three production AI/ML systems at Goldman Sachs — including an LLM-powered Deal Pricing workflow that uses RAG to surface relevant deal comps for MDs (cut research time by 70%) and an ML monitoring system that proactively flags failing payments before they escalate (reduced ops costs by 70%). He builds independently too — The Mole is an iOS game where 4 AI agents with persistent memory play social deduction rounds against each other, arguing and bluffing in real time. His AI PE Fund Matcher takes a company URL, analyzes the business, and returns a ranked shortlist of PE funds likely to acquire it — 4 hours of research in 18 seconds at 95% accuracy. M.S. from UT Austin, 3.94 GPA. The rare PM who can write the PRD and build the prototype.';
+      return 'Here\'s the case: Anmol shipped three production AI/ML systems at Goldman Sachs in 4 years. His LLM-powered Deal Pricing workflow uses RAG with hybrid retrieval and source-linked outputs to surface relevant deal comps for MDs — cut research time by 70% with ~90% fewer data-entry errors. He built the eval harness to benchmark it against MDs himself. His ML Payment Monitoring system proactively flags failing payments before they escalate — 50% faster per payment, 70% cost reduction. He also launched a 0→1 ML-driven fintech platform that hit $10M+ volume in 12 months. He led 15+ engineers, 4 data scientists, and 2 UX designers across 30+ sprints. On his own time, he built The Mole — an iOS game where 4 AI agents with persistent memory play social deduction rounds, arguing and bluffing in real time. His AI PE Fund Matcher takes a company URL and returns ranked PE funds likely to acquire it — 4 hours of research in 18 seconds at 95% accuracy. M.S. from UT Austin, 3.94 GPA, top 2%. Most PMs spec and hand off. Anmol specs, builds, and evals.';
     }
     // Combine top chunks if they share a section
     const top3 = retrieved.slice(0, 3);
@@ -1148,6 +1156,10 @@ window.anmol={
         { title: 'PM Intern', meta: 'Civitas Learning · EdTech · 2019', lines: [
           { text: 'Killed scaling investment in a $5M ARR product via business-case analysis', impact: 'Saved $140K' }
         ], tags: ['Product','Data','EdTech'] },
+        { title: 'Graduate Research Assistant', meta: 'UT Austin · Simulations & Game Applications Lab · 2019', lines: [
+          { text: 'Built UI and refactored codebase for Environ, an educational game about global decision-making', impact: 'Reduced game size by 37%' },
+          { text: 'Published Environ to the Mac App Store', impact: 'Featured in the Austin Chronicle' }
+        ], tags: ['Games','Research','Unity'] },
         { title: 'Software Engineer — VR', meta: 'PalindromeVR · 2016–2018', lines: [
           { text: 'Shipped 2 VR titles end-to-end on Google Daydream', impact: '4.1★ rating across 12 countries' }
         ], tags: ['Engineering','VR','Gaming'] },
@@ -1159,24 +1171,34 @@ window.anmol={
     education: {
       label: 'Education',
       cards: [
-        { title: 'M.S. Computer and Information Science', meta: 'UT Austin · 2018–2021', body: 'HCI focus · 3.94 GPA · Top 2% of class.', tags: ['HCI','AI','Research'] },
-        { title: 'B.Tech Computer Science', meta: 'NMIMS Mumbai · 2011–2015', body: 'Computer science foundation.', tags: ['CS','Engineering'] }
+        { title: 'M.S. Computer and Information Science', meta: 'UT Austin · 2018–2021', highlight: 'B.Tech in CS + M.S. in Computer Science — doesn\'t just write code, understands it.', body: 'Focus on Human-Computer Interaction — designing how people and technology work together. 3.94 GPA, Top 2% of class.', tags: ['HCI','AI','Research'] },
+        { title: 'B.Tech Computer Science', meta: 'NMIMS Mumbai · 2011–2015', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: ['CS','Engineering'] }
       ]
     },
     skills: {
       label: 'Skills & Toolkit',
       cards: [
-        { title: 'AI & Machine Learning', body: 'LLM APIs, Agentic AI, Claude Code, Claude API, RAG, Eval Harnesses, ML Modeling.', tags: ['LLMs','Agents','RAG','Evals'] },
-        { title: 'Engineering', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Data Science.', tags: ['Python','Swift','TypeScript','SQL'] },
-        { title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing.', tags: ['PRDs','Research','A/B Testing'] }
+        { title: 'AI & Machine Learning', body: 'LLM APIs (Claude, OpenAI), Agentic AI, Multi-Agent Systems, RAG (hybrid embedding + keyword retrieval), Eval Harnesses, Prompt Engineering, ML Modeling, Model-Tier Routing.', tags: ['LLMs','Agents','RAG','Evals','Prompt Eng'] },
+        { title: 'Engineering', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Deno/Edge Functions, Claude Code, Claude API, Jina AI, Data Pipelines, Git, CI/CD.', tags: ['Python','Swift','TypeScript','SQL','Supabase'] },
+        { title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing, Sprint Planning, Cross-Functional Leadership (Engineering, Data Science, UX), Stakeholder Management, 0→1 Product Launches.', tags: ['PRDs','Research','A/B Testing','0→1','Leadership'] }
       ]
     },
     about: {
       label: 'About Anmol',
       cards: [
-        { title: 'The short version', body: 'AI Product Manager, most recently at Goldman Sachs. Shipped production AI/ML systems and builds independently with Claude Code, Claude API, and Supabase. Strong opinions on great products, venture capital, e-sports metas, and why cardamom is the only acceptable chai spice.' },
-        { title: 'What drives him', body: 'Anmol sits at the intersection of AI and product — he can write a PRD and also build the prototype. Track record: 3 shipped AI/ML systems at Goldman, an adversarial multi-agent iOS game, and a PE fund matcher that does 4 hours of work in 18 seconds.' },
-        { title: 'Get in touch', body: 'Always up for interesting problems, ambitious builds, and chai debates.', tags: ['Email','LinkedIn','GitHub'] }
+        { title: '🧰 Builder by instinct', body: 'Can\'t encounter a problem without wanting to prototype a solution. Shipped VR games, then pivoted to Product Management, and now he\'s built a multi-agent social deduction game — follows curiosity wherever it goes.' },
+        { title: '🌏 Mumbai → Austin → Dallas', body: 'Grew up in Mumbai, grad school in Austin, shipped production AI at Goldman in Dallas. Code-switches between cultures, teams, and time zones easily.' },
+        { title: '🎮 Gaming brain', body: 'Analyzes esports metas and competitive game balance with the same rigor he brings to product funnels. If it\'s a system with hidden variables and emergent behavior, he\'s already thinking about it.' },
+        { title: '✍️ Writes about ideas', body: 'Essays about startups, venture capital, and technology ("The Enigma of the Valley"). Strong opinions, loosely held — except about cardamom chai.' },
+        { title: '📬 Say hello', body: 'Looking for an AI PM role where he can ship fast with a sharp team. If you\'re building something ambitious with LLMs, agents, or ML — let\'s talk.', tags: ['Email','LinkedIn','GitHub'] }
+      ]
+    },
+    hire: {
+      label: 'Why Hire Anmol',
+      cards: [
+        { title: '🧠 The TL;DR', highlight: '4 years at Goldman Sachs · 3 production AI systems · 15+ engineers led · 2 indie AI products shipped solo', body: 'AI Product Manager who writes PRDs and prototypes. Built an LLM workflow that cut MD research time by 70%, an ML system that reduced payment ops costs by 70%, and a 0→1 fintech platform that hit $10M+ volume in its first year. Then went home and built a multi-agent iOS game and an AI deal-sourcing tool for fun.' },
+        { title: '⚡ What makes him different', body: 'Most PMs spec. Anmol specs, builds, and evals. He designed a RAG pipeline with hybrid retrieval and source-linked outputs — then built the eval harness to benchmark it against MDs. He architected an ML monitoring system — then sat with ops teams to watch it catch failing payments in real time. He doesn\'t hand off and wait. He ships and iterates.' },
+        { title: '📬 Say hello', body: 'Looking for an AI PM role where he can ship fast with a sharp team. If you\'re building something ambitious with LLMs, agents, or ML — let\'s talk.', tags: ['Email','LinkedIn','GitHub'] }
       ]
     }
   };
@@ -1198,6 +1220,7 @@ window.anmol={
       if (card.link) html += '<a href="' + card.link + '">';
       html += '<div class="quick-card-title">' + card.title + '</div>';
       if (card.meta) html += '<div class="quick-card-meta">' + card.meta + '</div>';
+      if (card.highlight) html += '<div class="quick-card-highlight">' + card.highlight + '</div>';
       if (card.lines) {
         html += '<div class="quick-card-body">';
         card.lines.forEach(line => {
@@ -1269,7 +1292,9 @@ window.anmol={
     'secret': { emoji: '🔮', text: 'You found a secret! Try "chai", "coffee", "gaming", "the mole", "vr", "mumbai", "austin", "pm", "ai", or "hire anmol" — each one unlocks something different.' },
     '42': { emoji: '🌌', text: 'The answer to life, the universe, and everything — and also roughly how many sprints Anmol has led across Goldman Sachs products.' },
     'hello': { emoji: '✌️', text: 'Hey! Welcome to Anmol\'s corner of the internet. Click around, ask questions, or type "secret" to find all the hidden stuff.' },
-    'hi': { emoji: '✌️', text: 'Hey! Welcome to Anmol\'s corner of the internet. Click around, ask questions, or type "secret" to find all the hidden stuff.' }
+    'hi': { emoji: '✌️', text: 'Hey! Welcome to Anmol\'s corner of the internet. Click around, ask questions, or type "secret" to find all the hidden stuff.' },
+    'matrix': { emoji: '🐇', matrixRain: true, text: 'Wake up, recruiter... The Matrix has you. Follow the white rabbit.' },
+    'neo': { emoji: '🐇', matrixRain: true, text: 'Wake up, recruiter... The Matrix has you. Follow the white rabbit.' }
   };
 
   function fireConfetti() {
@@ -1321,6 +1346,32 @@ window.anmol={
         })();
       }, 200);
       if (egg.confetti) setTimeout(fireConfetti, 300);
+      // Matrix rain effect
+      if (egg.matrixRain) {
+        const canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9998;pointer-events:none;';
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        const cols = Math.floor(canvas.width / 16);
+        const drops = Array(cols).fill(1);
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ANMOL';
+        let frames = 0;
+        const draw = () => {
+          ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#0f0'; ctx.font = '14px monospace';
+          drops.forEach((y, i) => {
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 16, y * 16);
+            if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+          });
+          frames++;
+          if (frames < 180) requestAnimationFrame(draw);
+          else { canvas.style.transition = 'opacity 0.8s'; canvas.style.opacity = '0'; setTimeout(() => canvas.remove(), 800); }
+        };
+        draw();
+        textEl.style.color = '#0f0'; textEl.style.fontFamily = 'monospace';
+      }
       return;
     }
     const categoryKeywords = {
@@ -1328,7 +1379,8 @@ window.anmol={
       experience: ['experience','work','career','jobs','job','role','roles','worked'],
       education: ['education','school','university','degree','college','study','studied','gpa'],
       skills: ['skills','skill','toolkit','tech','stack','technologies','tools'],
-      about: ['about','who','background','intro','introduction','tell me about']
+      about: ['about','who','background','intro','introduction','tell me about'],
+      hire: ['hire','hiring','candidate','recruit','why hire']
     };
     let quickMatch = Object.keys(quickData).find(k => lower === k || lower === quickData[k].label.toLowerCase());
     if (!quickMatch) {
@@ -1473,6 +1525,116 @@ console.log('%c' +
   }
   ['mousemove','keydown','click','scroll','touchstart'].forEach(e => document.addEventListener(e, resetIdle, { passive: true }));
   resetIdle();
+})();
+
+/* ── Easter Egg 5: Konami Code → anti-gravity mode ── */
+(function() {
+  const code = [38,38,40,40,37,39,37,39,66,65]; // ↑↑↓↓←→←→BA
+  let pos = 0;
+  document.addEventListener('keydown', function(e) {
+    if (e.keyCode === code[pos]) {
+      pos++;
+      if (pos === code.length) {
+        pos = 0;
+        // Anti-gravity: everything floats up then reassembles
+        const els = document.querySelectorAll('.quick-card, .ai-response-inner, .prompt-input-wrap, .hero-photo, #hero-text, .hero-sub, .prompt-chip');
+        els.forEach(el => {
+          el.style.transition = 'transform 1.2s cubic-bezier(0.34,1.56,0.64,1), opacity 0.6s';
+          el.style.transform = 'translateY(-' + (40 + Math.random() * 80) + 'px) rotate(' + (Math.random() * 10 - 5) + 'deg)';
+          el.style.opacity = '0.3';
+        });
+        // Flash message
+        const msg = document.createElement('div');
+        msg.textContent = '🚀 GOD MODE ACTIVATED';
+        msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:32px;font-weight:800;color:#6366f1;z-index:9999;font-family:var(--display);text-shadow:0 0 40px rgba(99,102,241,0.5);transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);letter-spacing:0.05em;';
+        document.body.appendChild(msg);
+        requestAnimationFrame(() => msg.style.transform = 'translate(-50%,-50%) scale(1)');
+        // Reassemble
+        setTimeout(() => {
+          els.forEach(el => { el.style.transform = ''; el.style.opacity = ''; });
+          msg.style.opacity = '0';
+          msg.style.transition = 'opacity 0.5s';
+          setTimeout(() => msg.remove(), 500);
+        }, 2000);
+      }
+    } else { pos = 0; }
+  });
+})();
+
+/* ── Matrix rain now handled inside easterEggs object in handleSubmit ── */
+
+/* ── Easter Egg 7: Photo triple-click → spin + wink ── */
+(function() {
+  const photo = document.querySelector('.hero-photo');
+  if (!photo) return;
+  let clicks = 0, timer;
+  photo.addEventListener('click', function() {
+    clicks++;
+    clearTimeout(timer);
+    timer = setTimeout(() => clicks = 0, 500);
+    if (clicks >= 3) {
+      clicks = 0;
+      photo.style.transition = 'transform 0.8s cubic-bezier(0.34,1.56,0.64,1)';
+      photo.style.transform = 'rotate(360deg) scale(1.1)';
+      // Speech bubble
+      const bubble = document.createElement('div');
+      const quips = [
+        'You found me! 👀',
+        'Hire me, I dare you.',
+        'Yes, this site is a single HTML file.',
+        'Cardamom > everything.',
+        'I build things that think.',
+        'Try the Konami code 👆👆👇👇👈👉👈👉'
+      ];
+      bubble.textContent = quips[Math.floor(Math.random() * quips.length)];
+      bubble.style.cssText = 'position:absolute;top:-50px;left:50%;transform:translateX(-50%) scale(0);background:#6366f1;color:#fff;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap;z-index:100;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);font-family:var(--sans);';
+      photo.style.position = 'relative';
+      photo.appendChild(bubble);
+      requestAnimationFrame(() => bubble.style.transform = 'translateX(-50%) scale(1)');
+      setTimeout(() => {
+        photo.style.transform = '';
+        bubble.style.opacity = '0';
+        bubble.style.transition = 'opacity 0.3s';
+        setTimeout(() => bubble.remove(), 300);
+      }, 2500);
+    }
+  });
+})();
+
+/* ── Easter Egg 8: "sudo hire anmol" → terminal mode ── */
+/* (added to easterEggs in handleSubmit) */
+
+/* ── Easter Egg 9: Shake detection (mobile) → random fact ── */
+(function() {
+  let lastX, lastY, lastZ, lastTime = 0, shakeCount = 0;
+  window.addEventListener('devicemotion', function(e) {
+    const acc = e.accelerationIncludingGravity;
+    if (!acc) return;
+    const now = Date.now();
+    if (now - lastTime < 100) return;
+    const dx = Math.abs(acc.x - (lastX||0));
+    const dy = Math.abs(acc.y - (lastY||0));
+    const dz = Math.abs(acc.z - (lastZ||0));
+    if (dx + dy + dz > 30) {
+      shakeCount++;
+      if (shakeCount > 3) {
+        shakeCount = 0;
+        const facts = [
+          'Anmol\'s first product was a VR puzzle game. It shipped in 12 countries.',
+          'He once saved $140K by convincing a Head of Product to kill their own feature.',
+          'This entire portfolio site is one HTML file with zero build tools.',
+          'The AI answering your questions runs on Claude Haiku via Supabase Edge Functions.',
+          'Type "secret" in the search bar to find all the hidden easter eggs.'
+        ];
+        const bar = document.getElementById('prompt-bar');
+        const aiResp = document.getElementById('ai-response');
+        const aiText = document.getElementById('ai-response-text');
+        aiText.textContent = '📱 ' + facts[Math.floor(Math.random() * facts.length)];
+        aiResp.classList.add('show');
+      }
+    }
+    lastX = acc.x; lastY = acc.y; lastZ = acc.z; lastTime = now;
+  });
 })();
 
 })();
