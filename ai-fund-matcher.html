@@ -4,305 +4,515 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI PE Fund Matcher — Anmol Khandeparkar</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #07070f;
-  --panel: #0d0d1c;
-  --panel2: #111124;
-  --border: #1c1c38;
-  --border2: #252548;
-  --green: #00ff88;
-  --green-dim: rgba(0,255,136,0.08);
-  --green-glow: rgba(0,255,136,0.2);
-  --amber: #f5a623;
-  --amber-dim: rgba(245,166,35,0.08);
-  --purple: #b48aff;
-  --blue: #5bc8ff;
-  --red: #ff6b6b;
-  --text: #dce0f0;
-  --muted: #525870;
-  --muted2: #6e738f;
-  --pixel: 'Space Grotesk', sans-serif;
+  --bg: #FFFFFF;
+  --bg-warm: #FBF8F4;
+  --surface: #FFFFFF;
+  --border: #EDE8E0;
+  --border2: #F5F1EC;
+  --text: #1a1a2e;
+  --text2: #4a4a5a;
+  --muted: #8a8a9a;
+  --muted2: #bbb;
+  --accent: #222222;
+  --purple: #8B5CF6;
+  --blue: #3B82F6;
+  --green: #22C55E;
+  --red: #EF4444;
+  --amber: #D97706;
+  --sans: 'Inter', -apple-system, sans-serif;
   --mono: 'JetBrains Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
+  --display: 'Space Grotesk', sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius: 16px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.04);
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:998;}
-.wrap{max-width:1100px;margin:0 auto;padding:0 28px;}
-nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(7,7,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;}
-.nav-logo{font-family:var(--pixel);font-size:13px;color:var(--green);letter-spacing:1px;text-decoration:none;text-shadow:0 0 12px var(--green-glow);font-weight:600;}
-.back-btn{font-family:var(--mono);font-size:10px;color:var(--muted2);text-decoration:none;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;}
-.back-btn:hover{color:var(--green);}
-section{padding:72px 0;}
-.sh{display:flex;align-items:center;gap:16px;margin-bottom:40px;}
-.sh h2{font-family:var(--pixel);font-size:13px;color:var(--green);letter-spacing:3px;white-space:nowrap;font-weight:700;}
-.sh::after{content:'';flex:1;height:1px;background:var(--border);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}50%{box-shadow:0 0 0 4px rgba(0,255,136,0.15)}}
-@keyframes flow{0%{opacity:0;transform:translateX(-6px)}100%{opacity:1;transform:translateX(0)}}
-@media(max-width:900px){.hero-grid{grid-template-columns:1fr!important;}.stat-row{grid-template-columns:repeat(2,1fr)!important;}.pipeline-steps{grid-template-columns:1fr!important;}.diff-grid{grid-template-columns:1fr!important;}}
-@media(max-width:600px){.wrap{padding:0 16px;}.stat-row{grid-template-columns:1fr!important;}}
+[data-theme="dark"] {
+  --bg: #0f0f17; --bg-warm: #141420; --surface: #1a1a2e;
+  --border: #2a2a3e; --border2: #222236;
+  --text: #e8e8f0; --text2: #b0b0c8; --muted: #7a7a9a; --muted2: #555;
+  --accent: #b0b0c8;
+  --shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.3);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+}
+[data-theme="dark"] nav { background: rgba(15,15,23,0.9); }
+/* ── Dark mode component overrides ── */
+[data-theme="dark"] .stat-card { background: #111119; }
+[data-theme="dark"] .tech-tag { background: rgba(255,255,255,0.04); color: var(--muted); border-color: var(--border); }
+[data-theme="dark"] .tech-tag:first-child { background: rgba(255,255,255,0.06); border-color: var(--accent); color: var(--accent); }
+[data-theme="dark"] .pipe-step { background: #111119; }
+[data-theme="dark"] .pipe-step:last-child { background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.3); }
+[data-theme="dark"] .pipe-step:last-child .pipe-tech { background: rgba(34,197,94,0.1); }
+[data-theme="dark"] .pipe-tech { background: rgba(255,255,255,0.05); }
+[data-theme="dark"] .decision-card { background: #111119; }
+[data-theme="dark"] .output-wrap { background: #111119; }
+[data-theme="dark"] .output-bar { background: #0f0f17; }
+[data-theme="dark"] .fund-score.high { background: rgba(34,197,94,0.08); }
+[data-theme="dark"] .fund-score.mid { background: rgba(255,255,255,0.06); }
+[data-theme="dark"] .diff-card.before { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+[data-theme="dark"] .diff-card.after { background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.2); }
+[data-theme="dark"] .replay-btn:hover { background: rgba(255,255,255,0.06); }
+[data-theme="dark"] footer a:hover { background: rgba(255,255,255,0.06); }
+[data-theme="dark"] .code-link { background: #6366f1; color: #fff; }
+[data-theme="dark"] .code-link:hover { background: #818cf8; }
+[data-theme="dark"] .terminal-wrap { background: #1a1a2e; }
+.theme-toggle {
+  background: none; border: 1px solid var(--border); border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 16px;
+  transition: all 0.3s var(--ease); color: var(--muted); flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--text); color: var(--text); transform: rotate(30deg); }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; transition: background 0.4s ease, color 0.3s ease; }
+::selection { background: var(--accent); color: white; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  padding: 0 48px; height: 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border2);
+}
+.nav-name { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); text-decoration: none; }
+.back-link { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+.back-link:hover { color: var(--accent); }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+.wrap-narrow { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+section { padding: 80px 0; }
+.s-title {
+  font-family: var(--display); font-size: 13px; font-weight: 700;
+  color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 40px; display: flex; align-items: center; gap: 12px;
+}
+.s-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── Hero ── */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding-top: 60px; position: relative; overflow: hidden;
+}
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.hero-tag {
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px; font-weight: 500;
+}
+.hero-tag::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s ease infinite; }
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.hero-title {
+  font-family: var(--display); font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800; letter-spacing: -1.5px; line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero-tagline {
+  font-size: 18px; color: var(--accent); font-style: italic;
+  margin-bottom: 28px; font-weight: 500;
+}
+.hero-desc {
+  font-size: 16px; color: var(--text2); line-height: 1.8;
+  margin-bottom: 32px; max-width: 480px;
+}
+
+/* ── Stats ── */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+.stat-card {
+  background: var(--bg-warm); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 16px; text-align: center;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.stat-val { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.stat-label { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Tech tags */
+.tech-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tech-tag {
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  padding: 6px 14px; border-radius: 100px; border: 1px solid var(--border);
+  color: var(--text2); transition: all 0.2s;
+}
+.tech-tag:first-child { border-color: var(--accent); color: var(--accent); background: var(--bg-warm); }
+.code-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; background: var(--text); color: #fff;
+  border-radius: 100px; font-size: 14px; font-weight: 600;
+  text-decoration: none; transition: all 0.3s var(--ease);
+  margin-bottom: 16px;
+}
+.code-link:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+/* ── Terminal ── */
+.terminal-wrap {
+  background: var(--text); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-hover);
+}
+.terminal-bar {
+  background: #13132b; padding: 12px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.terminal-bar-title { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 1px; font-weight: 600; }
+.terminal-dots { display: flex; gap: 6px; }
+.terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
+#terminal {
+  padding: 20px; font-family: var(--mono); font-size: 12px;
+  line-height: 2; min-height: 320px; color: rgba(255,255,255,0.6);
+}
+@keyframes flow { 0% { opacity:0; transform:translateX(-6px); } 100% { opacity:1; transform:translateX(0); } }
+
+/* ── Pipeline ── */
+.pipeline-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.pipe-step {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 18px;
+  transition: all 0.3s var(--ease); position: relative;
+}
+.pipe-step:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow); }
+.pipe-num { font-family: var(--display); font-size: 28px; font-weight: 800; color: var(--border); margin-bottom: 12px; }
+.pipe-step:hover .pipe-num { color: var(--accent); }
+.pipe-title { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; margin-bottom: 10px; line-height: 1.5; }
+.pipe-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+.pipe-tech { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 3px 8px; background: var(--bg-warm); border-radius: 4px; display: inline-block; }
+.pipe-step:last-child { border-color: var(--green); background: #F0FDF4; }
+.pipe-step:last-child .pipe-num { color: var(--green); }
+.pipe-step:last-child .pipe-tech { color: var(--green); background: #ECFDF5; }
+
+/* ── Design decisions ── */
+.decisions { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+.decision-card {
+  background: var(--bg-warm); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px;
+}
+.decision-label { font-family: var(--display); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.decision-card:first-child .decision-label { color: var(--amber); }
+.decision-card:last-child .decision-label { color: var(--purple); }
+.decision-text { font-size: 14px; color: var(--text2); line-height: 1.7; }
+
+/* ── Output demo ── */
+.output-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.output-bar {
+  background: var(--bg-warm); border-bottom: 1px solid var(--border);
+  padding: 14px 24px; display: flex; justify-content: space-between; align-items: center;
+}
+.output-bar-title { font-family: var(--display); font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+.output-bar-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.fund-match { padding: 20px 24px; border-bottom: 1px solid var(--border2); transition: all 0.4s; }
+.fund-match:last-child { border-bottom: none; }
+.fund-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.fund-name { font-family: var(--display); font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.fund-meta { font-size: 12px; color: var(--muted); }
+.fund-score {
+  font-family: var(--display); font-size: 16px; font-weight: 800;
+  padding: 4px 14px; border-radius: 100px; border: 2px solid;
+}
+.fund-score.high { color: var(--green); border-color: var(--green); background: #F0FDF4; }
+.fund-score.mid { color: var(--accent); border-color: var(--accent); background: var(--bg-warm); }
+.fund-score.low { color: var(--muted); border-color: var(--border); }
+.fund-reason { font-size: 14px; color: var(--text2); line-height: 1.7; padding-left: 14px; border-left: 3px solid var(--border); }
+.replay-btn {
+  font-family: var(--display); font-size: 13px; font-weight: 600;
+  color: var(--accent); background: none; border: 1.5px solid var(--border);
+  padding: 10px 20px; border-radius: 100px; cursor: pointer;
+  transition: all 0.3s var(--ease); margin-top: 12px;
+}
+.replay-btn:hover { border-color: var(--accent); background: var(--bg-warm); transform: translateY(-2px); }
+
+/* ── Before/After ── */
+.diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.diff-card { border-radius: var(--radius); padding: 28px; }
+.diff-card.before { background: #FEF2F2; border: 1px solid #FECACA; }
+.diff-card.after { background: #F0FDF4; border: 1px solid #BBF7D0; }
+.diff-label { font-family: var(--display); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 16px; }
+.diff-card.before .diff-label { color: var(--red); }
+.diff-card.after .diff-label { color: var(--green); }
+.diff-item { display: flex; gap: 10px; font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+.diff-item .icon { flex-shrink: 0; font-weight: 700; }
+.diff-card.before .icon { color: var(--red); }
+.diff-card.after .icon { color: var(--green); }
+
+/* ── Footer ── */
+footer { text-align: center; padding: 60px 0 80px; border-top: 1px solid var(--border2); }
+footer a {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 600; color: var(--accent);
+  text-decoration: none; padding: 14px 32px;
+  border: 1.5px solid var(--border); border-radius: 100px;
+  transition: all 0.3s var(--ease);
+}
+footer a:hover { border-color: var(--accent); background: var(--bg-warm); transform: translateY(-2px); box-shadow: var(--shadow); }
+
+/* ── Reveal ── */
+.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+.js .reveal.vis { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .pipeline-grid { grid-template-columns: 1fr !important; }
+  .diff-grid, .decisions { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .wrap, .wrap-narrow { padding: 0 20px; }
+  .stat-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">AK.EXE</a>
-  <a href="index.html" class="back-btn">← Back</a>
+  <a href="index.html" class="nav-name">AK</a>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a href="index.html" class="back-link">← Back to portfolio</a>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">☀️</button>
+  </div>
 </nav>
 
 <!-- ── HERO ── -->
-<section style="min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:50%;left:40%;transform:translate(-50%,-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(0,255,136,0.03) 0%,transparent 70%);pointer-events:none;"></div>
-  <div class="wrap" style="width:100%;">
-    <div class="hero-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
-
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
       <div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px;"><span style="animation:blink 1.2s step-end infinite;">▶</span> AI Tool · Python · Deal Sourcing</div>
-        <div style="font-family:var(--pixel);font-size:clamp(14px,2.2vw,22px);color:#fff;line-height:1.8;margin-bottom:12px;text-shadow:0 0 40px var(--green-glow);">AI PE FUND<br>MATCHER</div>
-        <div style="font-family:var(--mono);font-size:14px;color:var(--green);font-style:italic;margin-bottom:28px;letter-spacing:1px;">Drop in a URL. Get your buyer list in seconds.</div>
+        <div class="hero-tag reveal">AI Tool · Python · Deal Sourcing</div>
+        <h1 class="hero-title reveal">AI PE Fund Matcher</h1>
+        <p class="hero-tagline reveal">Drop in a URL. Get your buyer list in seconds.</p>
+        <p class="hero-desc reveal">M&A advisors spend <strong>2–4 hours per client</strong> manually researching which PE funds might acquire them — limited to funds they already know. This tool takes a company URL, analyzes the business, and returns <strong>a ranked shortlist of PE fund matches with explainable reasoning</strong> in under 2 minutes.</p>
 
-        <p style="font-family:var(--mono);font-size:12px;color:var(--muted2);line-height:1.9;max-width:480px;margin-bottom:32px;">
-          M&A advisors spend <strong style="color:var(--text);">2–4 hours per client</strong> manually researching which PE funds might acquire them — limited to funds they already know. This tool takes a company URL, analyzes the business, and returns <strong style="color:var(--text);">a ranked shortlist of PE fund matches with explainable reasoning</strong> in under 2 minutes.
-        </p>
-
-        <!-- Stats -->
-        <div class="stat-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:36px;">
-          <div style="background:var(--panel);border:1px solid var(--border);padding:16px 12px;text-align:center;">
-            <div style="font-family:var(--pixel);font-size:15px;color:var(--green);margin-bottom:6px;font-weight:600;">18s</div>
-            <div style="font-family:var(--mono);font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">vs 4 hrs</div>
+        <div class="stat-row reveal">
+          <div class="stat-card">
+            <div class="stat-val">18s</div>
+            <div class="stat-label">vs 4 hrs</div>
           </div>
-          <div style="background:var(--panel);border:1px solid var(--border);padding:16px 12px;text-align:center;">
-            <div style="font-family:var(--pixel);font-size:15px;color:var(--green);margin-bottom:6px;font-weight:600;">95%</div>
-            <div style="font-family:var(--mono);font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Accuracy</div>
+          <div class="stat-card">
+            <div class="stat-val">95%</div>
+            <div class="stat-label">Accuracy</div>
           </div>
-          <div style="background:var(--panel);border:1px solid var(--border);padding:16px 12px;text-align:center;">
-            <div style="font-family:var(--pixel);font-size:15px;color:var(--green);margin-bottom:6px;font-weight:600;">$0.33</div>
-            <div style="font-family:var(--mono);font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">vs $400</div>
+          <div class="stat-card">
+            <div class="stat-val">$0.33</div>
+            <div class="stat-label">vs $400</div>
           </div>
-          <div style="background:var(--panel);border:1px solid var(--border);padding:16px 12px;text-align:center;">
-            <div style="font-family:var(--pixel);font-size:15px;color:var(--green);margin-bottom:6px;font-weight:600;">500+</div>
-            <div style="font-family:var(--mono);font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Funds covered</div>
+          <div class="stat-card">
+            <div class="stat-val">500+</div>
+            <div class="stat-label">Funds covered</div>
           </div>
         </div>
 
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <a href="https://bitbucket.org/tinkerer2493/ai_pe_fund_matcher/src/main/" target="_blank" style="font-family:var(--pixel);font-size:8px;padding:12px 20px;background:var(--green);color:#07070f;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translate(-3px,-3px)';this.style.boxShadow='3px 3px 0 rgba(0,255,136,0.4)';" onmouseout="this.style.transform='';this.style.boxShadow='';">▶ View Code</a>
-          <span style="font-family:var(--pixel);font-size:10px;padding:6px 10px;border:1px solid var(--green);color:var(--green);font-weight:600;">Python</span>
-          <span style="font-family:var(--pixel);font-size:10px;padding:6px 10px;border:1px solid var(--border2);color:var(--muted2);font-weight:600;">Claude API</span>
-          <span style="font-family:var(--pixel);font-size:10px;padding:6px 10px;border:1px solid var(--border2);color:var(--muted2);font-weight:600;">Jina AI</span>
-          <span style="font-family:var(--pixel);font-size:10px;padding:6px 10px;border:1px solid var(--border2);color:var(--muted2);font-weight:600;">Tool Calling</span>
-          <span style="font-family:var(--pixel);font-size:10px;padding:6px 10px;border:1px solid var(--border2);color:var(--muted2);font-weight:600;">Hybrid ML</span>
+        <a href="https://bitbucket.org/tinkerer2493/ai_pe_fund_matcher/src/main/" target="_blank" class="code-link reveal">View Code →</a>
+        <div class="tech-tags reveal">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Claude API</span>
+          <span class="tech-tag">Jina AI</span>
+          <span class="tech-tag">Tool Calling</span>
+          <span class="tech-tag">Hybrid ML</span>
         </div>
       </div>
 
-      <!-- Animated terminal output -->
-      <div style="background:var(--panel);border:1px solid var(--border2);overflow:hidden;box-shadow:0 0 40px var(--green-glow);">
-        <div style="background:var(--panel2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-          <div style="font-family:var(--pixel);font-size:10px;color:var(--green);letter-spacing:2px;font-weight:600;">ATLAS.PY — RUNNING</div>
-          <div style="display:flex;gap:6px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--red);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;"></div>
+      <!-- Animated terminal -->
+      <div class="terminal-wrap reveal">
+        <div class="terminal-bar">
+          <span class="terminal-bar-title">atlas.py — running</span>
+          <div class="terminal-dots">
+            <span style="background:var(--red);"></span>
+            <span style="background:var(--amber);"></span>
+            <span style="background:var(--green);"></span>
           </div>
         </div>
-        <div id="terminal" style="padding:20px;font-family:var(--mono);font-size:10px;line-height:2;min-height:340px;">
-          <!-- filled by JS -->
-        </div>
+        <div id="terminal"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── 5-STAGE PIPELINE ── -->
-<section style="padding-top:0;">
+<!-- ── PIPELINE ── -->
+<section class="bg-warm" style="background:var(--bg-warm);">
   <div class="wrap">
-    <div class="sh"><h2>◆ The Pipeline</h2></div>
-    <p style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.9;margin-bottom:36px;max-width:600px;">A sequential 5-stage pipeline where each stage feeds directly into the next. The whole thing runs end-to-end in under 2 minutes.</p>
+    <p class="s-title reveal">The Pipeline</p>
+    <p class="reveal" style="font-size:15px;color:var(--text2);margin-bottom:32px;max-width:600px;">A sequential 5-stage pipeline where each stage feeds directly into the next. The whole thing runs end-to-end in under 2 minutes.</p>
 
-    <div class="pipeline-steps" style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;">
-
-      <div class="pipe-step" style="background:var(--panel);border:1px solid var(--border);padding:22px 16px;position:relative;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.background='var(--green-dim)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--panel)';">
-        <div style="font-family:var(--pixel);font-size:14px;color:var(--green);margin-bottom:12px;">01</div>
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:10px;line-height:1.7;font-weight:600;">WEBSITE<br>EXTRACTION</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);line-height:1.7;margin-bottom:12px;">Jina AI Reader converts any company URL — including React SPAs and Angular apps — into clean, parseable markdown. No brittle scrapers.</div>
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--muted);border:1px solid var(--border2);padding:3px 6px;display:inline-block;font-weight:600;">Jina AI</div>
+    <div class="pipeline-grid reveal">
+      <div class="pipe-step">
+        <div class="pipe-num">01</div>
+        <div class="pipe-title">Website Extraction</div>
+        <div class="pipe-desc">Jina AI Reader converts any company URL — including React SPAs and Angular apps — into clean, parseable markdown.</div>
+        <span class="pipe-tech">Jina AI</span>
       </div>
-
-      <div class="pipe-step" style="background:var(--panel);border:1px solid var(--border);padding:22px 16px;position:relative;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.background='var(--green-dim)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--panel)';">
-        <div style="font-family:var(--pixel);font-size:14px;color:var(--green);margin-bottom:12px;">02</div>
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:10px;line-height:1.7;font-weight:600;">STRUCTURED<br>EXTRACTION</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);line-height:1.7;margin-bottom:12px;">Claude API with <strong style="color:var(--text);">tool calling + schema enforcement</strong> extracts sector, revenue, size, HQ, and business model into a guaranteed structured JSON — no hallucinated fields.</div>
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--muted);border:1px solid var(--border2);padding:3px 6px;display:inline-block;font-weight:600;">Claude API</div>
+      <div class="pipe-step">
+        <div class="pipe-num">02</div>
+        <div class="pipe-title">Structured Extraction</div>
+        <div class="pipe-desc">Claude API with tool calling + schema enforcement extracts sector, revenue, size, HQ into guaranteed structured JSON.</div>
+        <span class="pipe-tech">Claude API</span>
       </div>
-
-      <div class="pipe-step" style="background:var(--panel);border:1px solid var(--border);padding:22px 16px;position:relative;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.background='var(--green-dim)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--panel)';">
-        <div style="font-family:var(--pixel);font-size:14px;color:var(--green);margin-bottom:12px;">03</div>
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:10px;line-height:1.7;font-weight:600;">RULE-BASED<br>FILTER</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);line-height:1.7;margin-bottom:12px;">Hard filters eliminate funds with mismatched deal size, wrong sector, or wrong geography before any LLM reasoning. Cuts 500+ funds down to ~15 candidates fast and cheap.</div>
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--muted);border:1px solid var(--border2);padding:3px 6px;display:inline-block;font-weight:600;">Rule Engine</div>
+      <div class="pipe-step">
+        <div class="pipe-num">03</div>
+        <div class="pipe-title">Rule-Based Filter</div>
+        <div class="pipe-desc">Hard filters eliminate mismatched funds. Cuts 500+ funds down to ~15 candidates fast and cheap.</div>
+        <span class="pipe-tech">Rule Engine</span>
       </div>
-
-      <div class="pipe-step" style="background:var(--panel);border:1px solid var(--border);padding:22px 16px;position:relative;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.background='var(--green-dim)';" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--panel)';">
-        <div style="font-family:var(--pixel);font-size:14px;color:var(--green);margin-bottom:12px;">04</div>
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:10px;line-height:1.7;font-weight:600;">LLM<br>RANKING</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);line-height:1.7;margin-bottom:12px;">Claude reasons across the 15 candidates — scoring each on thesis fit, portfolio pattern, deal size alignment. Mimics how a senior M&A advisor thinks, at scale.</div>
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--muted);border:1px solid var(--border2);padding:3px 6px;display:inline-block;font-weight:600;">Claude API</div>
+      <div class="pipe-step">
+        <div class="pipe-num">04</div>
+        <div class="pipe-title">LLM Ranking</div>
+        <div class="pipe-desc">Claude reasons across candidates — scoring each on thesis fit, portfolio pattern, deal size alignment.</div>
+        <span class="pipe-tech">Claude API</span>
       </div>
-
-      <div class="pipe-step" style="background:var(--panel);border:1px solid var(--green);padding:22px 16px;position:relative;background:var(--green-dim);">
-        <div style="font-family:var(--pixel);font-size:14px;color:var(--green);margin-bottom:12px;">05</div>
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:10px;line-height:1.7;font-weight:600;">RANKED<br>OUTPUT</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);line-height:1.7;margin-bottom:12px;">3–5 PE funds, each with a plain-English explanation of why they're a fit — deal size, sector thesis, portfolio match, geography. Explainable, not just a list.</div>
-        <div style="font-family:var(--pixel);font-size:9px;color:var(--green);border:1px solid var(--green);padding:3px 6px;display:inline-block;font-weight:700;">OUTPUT ✓</div>
+      <div class="pipe-step">
+        <div class="pipe-num">05</div>
+        <div class="pipe-title">Ranked Output</div>
+        <div class="pipe-desc">3–5 PE funds, each with plain-English reasoning. Explainable, not just a list.</div>
+        <span class="pipe-tech">Output</span>
       </div>
     </div>
 
-    <!-- The key design decision -->
-    <div style="margin-top:2px;background:var(--panel2);border:1px solid var(--border);border-top:none;padding:18px 24px;">
-      <div class="diff-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
-        <div>
-          <div style="font-family:var(--pixel);font-size:10px;color:var(--amber);letter-spacing:2px;margin-bottom:8px;font-weight:700;">WHY HYBRID — NOT PURE LLM</div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.8;">Asking an LLM to reason across 500 funds at once is expensive, slow, and drifts. Hard rules eliminate the obviously wrong candidates first — then LLM reasoning handles the nuanced fit scoring. <strong style="color:var(--text);">Rules for speed. LLM for judgment.</strong></div>
-        </div>
-        <div>
-          <div style="font-family:var(--pixel);font-size:10px;color:var(--purple);letter-spacing:2px;margin-bottom:8px;font-weight:700;">WHY TOOL CALLING FOR EXTRACTION</div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.8;">Free-form extraction hallucinates missing fields and returns inconsistent shapes. Schema enforcement via tool calling guarantees every company profile has the same structure — no downstream null checks, no format surprises. <strong style="color:var(--text);">Deterministic inputs → reliable outputs.</strong></div>
-        </div>
+    <div class="decisions reveal">
+      <div class="decision-card">
+        <div class="decision-label">Why Hybrid — Not Pure LLM</div>
+        <div class="decision-text">Asking an LLM to reason across 500 funds at once is expensive, slow, and drifts. Hard rules eliminate the obviously wrong candidates first — then LLM reasoning handles the nuanced fit scoring. <strong>Rules for speed. LLM for judgment.</strong></div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-label">Why Tool Calling for Extraction</div>
+        <div class="decision-text">Free-form extraction hallucinates missing fields and returns inconsistent shapes. Schema enforcement via tool calling guarantees every company profile has the same structure. <strong>Deterministic inputs → reliable outputs.</strong></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── SAMPLE OUTPUT ── -->
-<section style="padding-top:0;">
+<section>
   <div class="wrap">
-    <div class="sh"><h2>◆ Sample Output</h2></div>
-    <p style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:28px;">Input: <span style="color:var(--green);">https://freyavoice.ai</span> — AI voice platform, ~$2M–10M revenue, Austin TX. Output in 18 seconds:</p>
+    <p class="s-title reveal">Sample Output</p>
+    <p class="reveal" style="font-size:15px;color:var(--text2);margin-bottom:28px;">Input: <span style="color:var(--accent);font-weight:600;">https://freyavoice.ai</span> — AI voice platform, ~$2M–10M revenue, Austin TX. Output in 18 seconds:</p>
 
-    <div id="output-demo" style="background:var(--panel);border:1px solid var(--border2);overflow:hidden;">
-      <div style="background:var(--panel2);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;justify-content:space-between;">
-        <div style="font-family:var(--pixel);font-size:10px;color:var(--green);letter-spacing:2px;font-weight:700;">MATCHED FUNDS — 3 OF 5 SHOWN</div>
-        <div style="font-family:var(--pixel);font-size:10px;color:var(--muted);letter-spacing:1px;font-weight:600;">18.3s · $0.33 API cost</div>
+    <div class="output-wrap reveal">
+      <div class="output-bar">
+        <span class="output-bar-title">Matched Funds — 3 of 5 shown</span>
+        <span class="output-bar-meta">18.3s · $0.33 API cost</span>
       </div>
 
-      <!-- Fund match 1 -->
-      <div id="fund1" style="opacity:0;transform:translateY(6px);transition:all 0.4s;border-bottom:1px solid var(--border);padding:20px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div class="fund-match" id="fund1" style="opacity:0;transform:translateY(8px);">
+        <div class="fund-header">
           <div>
-            <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:4px;font-weight:600;">#1 · VISTA EQUITY PARTNERS</div>
-            <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">B2B SaaS · $1B–$15B AUM · North America</div>
+            <div class="fund-name">#1 · Vista Equity Partners</div>
+            <div class="fund-meta">B2B SaaS · $1B–$15B AUM · North America</div>
           </div>
-          <div style="font-family:var(--pixel);font-size:13px;color:var(--green);border:1px solid var(--green);padding:4px 10px;font-weight:700;">92/100</div>
+          <span class="fund-score high">92</span>
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.8;border-left:2px solid var(--green);padding-left:12px;">"FreyaVoice's B2B SaaS model with recurring revenue aligns directly with Vista's thesis of acquiring profitable software businesses. AI voice infrastructure is adjacent to Vista's existing portfolio companies in HR and customer engagement tech. Deal size fits Vista's lower-middle market entry point."</div>
+        <div class="fund-reason">"FreyaVoice's B2B SaaS model with recurring revenue aligns directly with Vista's thesis of acquiring profitable software businesses. AI voice infrastructure is adjacent to Vista's existing portfolio companies in HR and customer engagement tech. Deal size fits Vista's lower-middle market entry point."</div>
       </div>
 
-      <!-- Fund match 2 -->
-      <div id="fund2" style="opacity:0;transform:translateY(6px);transition:all 0.4s;border-bottom:1px solid var(--border);padding:20px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div class="fund-match" id="fund2" style="opacity:0;transform:translateY(8px);">
+        <div class="fund-header">
           <div>
-            <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:4px;font-weight:600;">#2 · FRANCISCO PARTNERS</div>
-            <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Tech-focused · $2B–$30B AUM · Global</div>
+            <div class="fund-name">#2 · Francisco Partners</div>
+            <div class="fund-meta">Tech-focused · $2B–$30B AUM · Global</div>
           </div>
-          <div style="font-family:var(--pixel);font-size:13px;color:var(--amber);border:1px solid var(--amber);padding:4px 10px;font-weight:700;">84/100</div>
+          <span class="fund-score mid">84</span>
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.8;border-left:2px solid var(--amber);padding-left:12px;">"Francisco's portfolio includes voice and speech AI companies. Strong pattern match on AI infrastructure plays at the Series A–B stage. Austin-based portfolio companies (3 current) suggest comfort with the geography."</div>
+        <div class="fund-reason">"Francisco's portfolio includes voice and speech AI companies. Strong pattern match on AI infrastructure plays at the Series A–B stage. Austin-based portfolio companies (3 current) suggest comfort with the geography."</div>
       </div>
 
-      <!-- Fund match 3 -->
-      <div id="fund3" style="opacity:0;transform:translateY(6px);transition:all 0.4s;padding:20px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div class="fund-match" id="fund3" style="opacity:0;transform:translateY(8px);">
+        <div class="fund-header">
           <div>
-            <div style="font-family:var(--pixel);font-size:11px;color:var(--text);letter-spacing:1px;margin-bottom:4px;font-weight:600;">#3 · THOMA BRAVO</div>
-            <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);">Software · $5B–$35B AUM · North America</div>
+            <div class="fund-name">#3 · Thoma Bravo</div>
+            <div class="fund-meta">Software · $5B–$35B AUM · North America</div>
           </div>
-          <div style="font-family:var(--pixel);font-size:13px;color:var(--muted2);border:1px solid var(--border2);padding:4px 10px;font-weight:700;">77/100</div>
+          <span class="fund-score low">77</span>
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.8;border-left:2px solid var(--border2);padding-left:12px;">"Thoma Bravo targets software businesses with strong gross margins. FreyaVoice qualifies on business model, but deal size is at the lower end of Thoma's typical range. Worth a conversation at growth stage."</div>
+        <div class="fund-reason">"Thoma Bravo targets software businesses with strong gross margins. FreyaVoice qualifies on business model, but deal size is at the lower end of Thoma's typical range. Worth a conversation at growth stage."</div>
       </div>
     </div>
-    <div style="text-align:right;margin-top:8px;">
-      <button onclick="replayOutput()" style="font-family:var(--pixel);font-size:10px;color:var(--green);background:transparent;border:1px solid var(--green);padding:8px 14px;cursor:pointer;letter-spacing:1px;font-weight:600;">↺ REPLAY</button>
+
+    <div style="text-align:right;">
+      <button class="replay-btn" onclick="replayOutput()">Replay animation →</button>
     </div>
   </div>
 </section>
 
-<!-- ── THE BUSINESS CASE ── -->
-<section style="padding-top:0;">
+<!-- ── BEFORE / AFTER ── -->
+<section style="background:var(--bg-warm);padding-top:60px;">
   <div class="wrap">
-    <div class="sh"><h2>◆ Why This Exists</h2></div>
-    <div class="diff-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
-      <div style="background:rgba(255,107,107,0.04);border:1px solid rgba(255,107,107,0.25);padding:24px;">
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--red);letter-spacing:2px;margin-bottom:16px;font-weight:700;">BEFORE</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--red);flex-shrink:0;">✗</span> 2–4 hours per client to build a buyer list</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--red);flex-shrink:0;">✗</span> Limited to funds the advisor already knows</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--red);flex-shrink:0;">✗</span> Same manual research flow for every client</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--red);flex-shrink:0;">✗</span> Misses regional / specialized funds outside the network</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--red);flex-shrink:0;">✗</span> ~$250–500 in advisor time per analysis</div>
-        </div>
+    <p class="s-title reveal">Why This Exists</p>
+    <div class="diff-grid reveal">
+      <div class="diff-card before">
+        <div class="diff-label">Before</div>
+        <div class="diff-item"><span class="icon">✗</span> 2–4 hours per client to build a buyer list</div>
+        <div class="diff-item"><span class="icon">✗</span> Limited to funds the advisor already knows</div>
+        <div class="diff-item"><span class="icon">✗</span> Same manual research flow for every client</div>
+        <div class="diff-item"><span class="icon">✗</span> Misses regional / specialized funds outside the network</div>
+        <div class="diff-item"><span class="icon">✗</span> ~$250–500 in advisor time per analysis</div>
       </div>
-      <div style="background:var(--green-dim);border:1px solid rgba(0,255,136,0.3);padding:24px;">
-        <div style="font-family:var(--pixel);font-size:11px;color:var(--green);letter-spacing:2px;margin-bottom:16px;font-weight:700;">AFTER</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--green);flex-shrink:0;">✓</span> 18 seconds. Same quality output.</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--green);flex-shrink:0;">✓</span> Systematically evaluates 500+ funds</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--green);flex-shrink:0;">✓</span> Same pipeline runs for every client, every time</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--green);flex-shrink:0;">✓</span> Surfaces regional and niche funds the advisor would miss</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.7;display:flex;gap:10px;"><span style="color:var(--green);flex-shrink:0;">✓</span> $0.33 per analysis in API costs</div>
-        </div>
+      <div class="diff-card after">
+        <div class="diff-label">After</div>
+        <div class="diff-item"><span class="icon">✓</span> 18 seconds. Same quality output.</div>
+        <div class="diff-item"><span class="icon">✓</span> Systematically evaluates 500+ funds</div>
+        <div class="diff-item"><span class="icon">✓</span> Same pipeline runs for every client, every time</div>
+        <div class="diff-item"><span class="icon">✓</span> Surfaces regional and niche funds the advisor would miss</div>
+        <div class="diff-item"><span class="icon">✓</span> $0.33 per analysis in API costs</div>
       </div>
     </div>
   </div>
 </section>
 
-<footer style="border-top:1px solid var(--border);padding:60px 0;text-align:center;">
-  <div class="wrap">
-    <div style="font-family:var(--pixel);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:24px;font-weight:600;">[ BUILT IN 2025 · PROJECT ATLAS ]</div>
-    <a href="index.html" style="font-family:var(--pixel);font-size:12px;color:var(--green);text-decoration:none;letter-spacing:1px;border:1px solid var(--green);padding:14px 22px;font-weight:600;">← BACK TO PORTFOLIO</a>
-  </div>
+<footer>
+  <a href="index.html">← Back to portfolio</a>
 </footer>
 
 <script>
+(function(){
+document.documentElement.classList.add('js');
+
+// Reveal observer
+try {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); }});
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+} catch(e) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('vis')); }
+setTimeout(() => document.querySelectorAll('.reveal:not(.vis)').forEach(el => el.classList.add('vis')), 3000);
+
 // Terminal animation
 const lines = [
-  { text: '$ python atlas.py --url https://freyavoice.ai', color: '#6e738f', delay: 0 },
+  { text: '$ python atlas.py --url https://freyavoice.ai', color: '#8a8a9a', delay: 0 },
   { text: '', delay: 200 },
-  { text: '[01] Extracting website content via Jina AI...', color: '#6e738f', delay: 600 },
-  { text: '     ✓ 2,847 tokens extracted cleanly', color: '#00ff88', delay: 1200 },
+  { text: '[01] Extracting website content via Jina AI...', color: '#8a8a9a', delay: 600 },
+  { text: '     ✓ 2,847 tokens extracted cleanly', color: '#22C55E', delay: 1200 },
   { text: '', delay: 1400 },
-  { text: '[02] Running structured extraction (tool calling)...', color: '#6e738f', delay: 1600 },
-  { text: '     sector: "AI / Voice Infrastructure"', color: '#dce0f0', delay: 2100 },
-  { text: '     revenue_range: "$2M–$10M"', color: '#dce0f0', delay: 2300 },
-  { text: '     hq: "Austin, TX"  model: "B2B SaaS"', color: '#dce0f0', delay: 2500 },
+  { text: '[02] Running structured extraction (tool calling)...', color: '#8a8a9a', delay: 1600 },
+  { text: '     sector: "AI / Voice Infrastructure"', color: '#fff', delay: 2100 },
+  { text: '     revenue_range: "$2M–$10M"', color: '#fff', delay: 2300 },
+  { text: '     hq: "Austin, TX"  model: "B2B SaaS"', color: '#fff', delay: 2500 },
   { text: '', delay: 2700 },
-  { text: '[03] Rule-based filter: 500 → 14 candidates', color: '#6e738f', delay: 2900 },
-  { text: '[04] LLM ranking 14 funds by fit score...', color: '#6e738f', delay: 3400 },
+  { text: '[03] Rule-based filter: 500 → 14 candidates', color: '#8a8a9a', delay: 2900 },
+  { text: '[04] LLM ranking 14 funds by fit score...', color: '#8a8a9a', delay: 3400 },
   { text: '', delay: 3900 },
-  { text: '[05] ✓ 5 matches returned  (18.3s · $0.33)', color: '#00ff88', delay: 4100 },
+  { text: '[05] ✓ 5 matches returned  (18.3s · $0.33)', color: '#22C55E', delay: 4100 },
   { text: '', delay: 4300 },
-  { text: '  #1  Vista Equity Partners    92/100', color: '#00ff88', delay: 4500 },
-  { text: '  #2  Francisco Partners       84/100', color: '#f5a623', delay: 4700 },
-  { text: '  #3  Thoma Bravo              77/100', color: '#6e738f', delay: 4900 },
+  { text: '  #1  Vista Equity Partners    92/100', color: '#22C55E', delay: 4500 },
+  { text: '  #2  Francisco Partners       84/100', color: '#8a8a9a', delay: 4700 },
+  { text: '  #3  Thoma Bravo              77/100', color: '#8a8a9a', delay: 4900 },
 ];
 
-let termTimer;
 function runTerminal() {
   const el = document.getElementById('terminal');
   el.innerHTML = '';
-  clearTimeout(termTimer);
   lines.forEach(line => {
     setTimeout(() => {
       const d = document.createElement('div');
-      d.style.color = line.color || '#6e738f';
+      d.style.color = line.color || '#8a8a9a';
       d.style.fontFamily = 'var(--mono)';
-      d.style.fontSize = '10px';
-      d.style.lineHeight = '1.9';
+      d.style.fontSize = '12px';
+      d.style.lineHeight = '2';
       d.style.animation = 'flow 0.3s ease forwards';
-      d.textContent = line.text || '\u00a0';
+      d.textContent = line.text || ' ';
       el.appendChild(d);
       el.scrollTop = el.scrollHeight;
     }, line.delay);
@@ -315,13 +525,22 @@ function replayOutput() {
   ['fund1','fund2','fund3'].forEach(id => {
     const el = document.getElementById(id);
     el.style.opacity = '0';
-    el.style.transform = 'translateY(6px)';
+    el.style.transform = 'translateY(8px)';
   });
   setTimeout(() => { const e = document.getElementById('fund1'); e.style.opacity='1'; e.style.transform='translateY(0)'; }, 400);
   setTimeout(() => { const e = document.getElementById('fund2'); e.style.opacity='1'; e.style.transform='translateY(0)'; }, 1000);
   setTimeout(() => { const e = document.getElementById('fund3'); e.style.opacity='1'; e.style.transform='translateY(0)'; }, 1600);
 }
 window.addEventListener('load', () => setTimeout(replayOutput, 5200));
+})();
+</script>
+<script>
+(function(){
+  const t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  document.documentElement.setAttribute('data-theme',t);
+  const b=document.getElementById('theme-toggle');
+  if(b){b.textContent=t==='dark'?'☀️':'🌙';b.addEventListener('click',()=>{const c=document.documentElement.getAttribute('data-theme'),n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('theme',n);b.textContent=n==='dark'?'☀️':'🌙';});}
+})();
 </script>
 </body>
 </html>
