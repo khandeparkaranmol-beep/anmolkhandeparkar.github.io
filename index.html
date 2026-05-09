@@ -664,6 +664,25 @@ section { padding: 100px 0; position: relative; }
   .quick-cards, .ai-response { max-width: 100%; }
   .hero-links { gap: 16px; }
 }
+
+/* ── Sound toggle ── */
+.sound-toggle {
+  background: none; border: 1px solid var(--border); border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 16px;
+  transition: all 0.3s var(--ease); color: var(--muted); flex-shrink: 0;
+}
+.sound-toggle:hover { border-color: #6366f1; color: var(--text); box-shadow: 0 0 16px rgba(99,102,241,0.15); }
+
+/* ── Radial wipe ── */
+.theme-wipe {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.theme-wipe.expand {
+  transform: translate(-50%, -50%) scale(1);
+}
 </style>
 </head>
 <body>
@@ -674,6 +693,7 @@ section { padding: 100px 0; position: relative; }
   <a href="#" class="nav-name">AK</a>
   <div style="display:flex;align-items:center;gap:16px;">
     <span class="nav-status">Open to interesting problems</span>
+    <button class="sound-toggle" id="sound-toggle" title="Toggle sound" aria-label="Toggle sound">🔇</button>
     <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">☀️</button>
   </div>
 </nav>
@@ -767,12 +787,174 @@ document.documentElement.setAttribute('data-theme', savedTheme);
 const themeBtn = document.getElementById('theme-toggle');
 if (themeBtn) {
   themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-  themeBtn.addEventListener('click', () => {
+  // Click handler added below in radial wipe section
+}
+
+/* ── Ambient Sound Engine (Web Audio API) ── */
+const SFX = (() => {
+  let ctx, enabled = false;
+  const soundBtn = document.getElementById('sound-toggle');
+
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+
+  // Convolver for subtle room reverb
+  let reverbBuffer = null;
+  function createReverb(c) {
+    if (reverbBuffer) return;
+    const len = c.sampleRate * 0.3;
+    reverbBuffer = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = reverbBuffer.getChannelData(ch);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5);
+    }
+  }
+  function addReverb(c, source, wet) {
+    createReverb(c);
+    const conv = c.createConvolver();
+    conv.buffer = reverbBuffer;
+    const wetGain = c.createGain();
+    wetGain.gain.value = wet;
+    source.connect(conv);
+    conv.connect(wetGain);
+    wetGain.connect(c.destination);
+  }
+
+  function play(type) {
+    if (!enabled) return;
+    const c = getCtx();
+    const t = c.currentTime;
+
+    if (type === 'tick') {
+      // Tiny keystroke — barely audible, randomized pitch for natural feel
+      const buf = c.createBuffer(1, c.sampleRate * 0.012, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 12);
+      const src = c.createBufferSource(); src.buffer = buf;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+      lp.frequency.value = 2000 + Math.random() * 1500;
+      const g = c.createGain(); g.gain.setValueAtTime(0.04 + Math.random() * 0.02, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.012);
+      src.connect(lp); lp.connect(g); g.connect(c.destination);
+      src.start(t); src.stop(t + 0.012);
+    } else if (type === 'click') {
+      // Woody tap — like a soft key press on a premium keyboard
+      const buf = c.createBuffer(1, c.sampleRate * 0.04, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 8);
+      const src = c.createBufferSource(); src.buffer = buf;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3000; lp.Q.value = 0.5;
+      const g = c.createGain(); g.gain.setValueAtTime(0.12, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      src.connect(lp); lp.connect(g); g.connect(c.destination);
+      src.start(t); src.stop(t + 0.04);
+    } else if (type === 'chime') {
+      // Glass bell — soft, warm, with natural harmonics and reverb tail
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = c.createOscillator(); osc.type = 'sine';
+        osc.frequency.value = freq;
+        const g = c.createGain();
+        const start = t + i * 0.06;
+        g.gain.setValueAtTime(0, start);
+        g.gain.linearRampToValueAtTime(0.05 - i * 0.012, start + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+        osc.connect(g); g.connect(c.destination);
+        addReverb(c, g, 0.15);
+        osc.start(start); osc.stop(start + 0.5);
+      });
+    } else if (type === 'whoosh') {
+      // Bubble pop — round, satisfying
+      const osc = c.createOscillator(); osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, t);
+      osc.frequency.exponentialRampToValueAtTime(600, t + 0.04);
+      osc.frequency.exponentialRampToValueAtTime(480, t + 0.1);
+      const g = c.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.08, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      osc.connect(g); g.connect(c.destination);
+      addReverb(c, g, 0.1);
+      osc.start(t); osc.stop(t + 0.12);
+    } else if (type === 'toggle') {
+      // Tiny sparkle — light, airy
+      const osc = c.createOscillator(); osc.type = 'sine';
+      osc.frequency.setValueAtTime(1047, t);
+      osc.frequency.exponentialRampToValueAtTime(1175, t + 0.08);
+      const g = c.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.025, t + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      osc.connect(g); g.connect(c.destination);
+      addReverb(c, g, 0.25);
+      osc.start(t); osc.stop(t + 0.15);
+    }
+  }
+
+  // Sound toggle button
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      enabled = !enabled;
+      soundBtn.textContent = enabled ? '🔊' : '🔇';
+      if (enabled) { getCtx(); play('click'); }
+    });
+  }
+
+  return { play };
+})();
+
+/* ── Dark mode radial wipe ── */
+if (themeBtn) {
+  // Replace the existing click handler with radial wipe version
+  themeBtn.replaceWith(themeBtn.cloneNode(true));
+  const newThemeBtn = document.getElementById('theme-toggle');
+  newThemeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+  newThemeBtn.addEventListener('click', (e) => {
+    SFX.play('toggle');
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    const nextBg = next === 'dark' ? '#0f0f17' : '#fafaf8';
+
+    // Calculate wipe size to cover the entire viewport
+    const rect = newThemeBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const maxDist = Math.max(
+      Math.hypot(cx, cy),
+      Math.hypot(window.innerWidth - cx, cy),
+      Math.hypot(cx, window.innerHeight - cy),
+      Math.hypot(window.innerWidth - cx, window.innerHeight - cy)
+    );
+    const diameter = maxDist * 2;
+
+    // Create wipe element
+    const wipe = document.createElement('div');
+    wipe.className = 'theme-wipe';
+    wipe.style.left = cx + 'px';
+    wipe.style.top = cy + 'px';
+    wipe.style.width = diameter + 'px';
+    wipe.style.height = diameter + 'px';
+    wipe.style.background = nextBg;
+    document.body.appendChild(wipe);
+
+    // Trigger expansion
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        wipe.classList.add('expand');
+      });
+    });
+
+    // After wipe covers screen, swap theme and remove wipe
+    setTimeout(() => {
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      newThemeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      // Fade out wipe
+      wipe.style.transition = 'opacity 0.2s ease';
+      wipe.style.opacity = '0';
+      setTimeout(() => wipe.remove(), 200);
+    }, 550);
   });
 }
 
@@ -1078,7 +1260,7 @@ window.anmol={
           if (data === '[DONE]') continue;
           try {
             const p = JSON.parse(data);
-            if (p.text) { fullText += p.text; aiResponseText.textContent = fullText; aiResponseText.appendChild(cursor); }
+            if (p.text) { fullText += p.text; aiResponseText.textContent = fullText; aiResponseText.appendChild(cursor); if (fullText.length % 5 === 0) SFX.play('tick'); }
           } catch(e) { /* skip */ }
         }
       }
@@ -1120,6 +1302,7 @@ window.anmol={
           const c = text[i];
           container.textContent = text.slice(0, i + 1);
           container.appendChild(cursor);
+          if (i % 3 === 0) SFX.play('tick'); // tick every 3rd char to avoid overload
           i++;
           setTimeout(type, c === '—' ? 120 : c === ',' ? 80 : c === '.' ? 100 : 15 + Math.random() * 25);
         } else {
@@ -1242,6 +1425,7 @@ window.anmol={
 
     // Trigger staggered entrance
     requestAnimationFrame(() => {
+      SFX.play('whoosh');
       const staggerEls = quickCardsEl.querySelectorAll('.qc-stagger');
       staggerEls.forEach(el => el.classList.add('qc-in'));
       // Scroll last card into view after stagger completes
@@ -1314,12 +1498,14 @@ window.anmol={
   function handleSubmit() {
     const query = promptBar.value.trim();
     if (!query || isStreaming) return;
+    SFX.play('click');
     // Check if it matches a quick category (exact or contains)
     const lower = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
 
     // Easter egg check
     const egg = easterEggs[lower];
     if (egg) {
+      SFX.play('chime');
       quickCardsEl.classList.remove('show'); quickCardsEl.innerHTML = '';
       chipContainer.style.display = 'none';
       aiResponseText.innerHTML = '';
@@ -1338,6 +1524,7 @@ window.anmol={
         (function typeTick() {
           if (ci < txt.length) {
             textEl.textContent = txt.slice(0, ci + 1);
+            SFX.play('tick');
             ci++;
             setTimeout(typeTick, 35 + Math.random() * 25);
           } else {
@@ -1410,6 +1597,7 @@ window.anmol={
       (function tick() {
         if (i < text.length) {
           promptBar.value = text.slice(0, i + 1);
+          SFX.play('tick');
           i++;
           setTimeout(tick, 55 + Math.random() * 45);
         } else {
@@ -1423,6 +1611,7 @@ window.anmol={
   $$('.prompt-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       if (isStreaming) return;
+      SFX.play('click');
       $$('.prompt-chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       const type = chip.dataset.type;
