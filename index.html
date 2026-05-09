@@ -380,6 +380,12 @@ body::before {
 .prompt-sep {
   width: 1px; height: 20px; background: var(--border); align-self: center; flex-shrink: 0;
 }
+.chip-break {
+  flex-basis: 100%; height: 0; margin: 0; padding: 0; border: none;
+}
+.prompt-chips .prompt-chip {
+  flex: 1 1 0; text-align: center; max-width: 200px;
+}
 [data-theme="dark"] .prompt-sep { background: rgba(255,255,255,0.08); }
 
 /* ── Quick-answer cards ── */
@@ -724,9 +730,10 @@ section { padding: 100px 0; position: relative; }
         <button class="prompt-chip" data-type="quick" data-category="projects" data-query="What projects has Anmol built?">Projects</button>
         <button class="prompt-chip" data-type="quick" data-category="experience" data-query="Where has Anmol worked?">Experience</button>
         <button class="prompt-chip" data-type="quick" data-category="education" data-query="Where did Anmol study?">Education</button>
+        <span class="chip-break"></span>
         <button class="prompt-chip" data-type="quick" data-category="skills" data-query="What are Anmol's skills?">Skills</button>
         <button class="prompt-chip" data-type="quick" data-category="about" data-query="Tell me something about Anmol">About</button>
-        <button class="prompt-chip" data-type="quick" data-category="hire" data-query="Why should I hire Anmol?">Why hire Anmol? →</button>
+        <button class="prompt-chip" data-type="quick" data-category="hire" data-query="Why should I hire Anmol?">Why hire Anmol?</button>
       </div>
 
       <!-- Quick-answer cards (pre-built, no API) -->
@@ -1688,8 +1695,8 @@ console.log('%c' +
 (function() {
   let idleTimer;
   const nudges = [
-    'Try asking "Why hire Anmol?" →',
-    'Curious about his projects? Click one above.',
+    'Try asking "Why hire Anmol?"',
+    'Curious about his projects? Click "Projects" below.',
     'Type "chai" for a hot take ☕',
     'He shipped AI at Goldman. Ask about it.',
   ];
@@ -1822,6 +1829,128 @@ console.log('%c' +
       }
     }
     lastX = acc.x; lastY = acc.y; lastZ = acc.z; lastTime = now;
+  });
+})();
+
+/* ── Contextual Easter Egg: Time-aware greeting ── */
+(function() {
+  const hour = new Date().getHours();
+  const sub = document.querySelector('.hero-sub .hl');
+  if (!sub) return;
+  let timeMsg = '';
+  if (hour >= 0 && hour < 5) timeMsg = 'Burning the midnight oil? Anmol does that too.';
+  else if (hour >= 5 && hour < 8) timeMsg = 'Early bird recruiter — Anmol respects that.';
+  else if (hour >= 22) timeMsg = 'Late-night browsing? Good things happen after dark.';
+  if (timeMsg) {
+    const tip = document.createElement('span');
+    tip.textContent = timeMsg;
+    tip.style.cssText = 'display:block;font-size:12px;color:var(--muted);font-weight:400;margin-top:6px;opacity:0;transition:opacity 1.5s ease;font-family:var(--sans);letter-spacing:0;';
+    sub.parentElement.appendChild(tip);
+    setTimeout(() => tip.style.opacity = '0.7', 2000);
+    setTimeout(() => { tip.style.opacity = '0'; setTimeout(() => tip.remove(), 1500); }, 8000);
+  }
+})();
+
+/* ── Contextual Easter Egg: Copy-paste detection ── */
+(function() {
+  let shown = false;
+  document.addEventListener('copy', function() {
+    if (shown) return;
+    shown = true;
+    const toast = document.createElement('div');
+    toast.innerHTML = 'Sharing with the team? <button id="copy-email-btn" style="background:#6366f1;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-left:6px;font-family:var(--sans);">Copy his email</button>';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-family:var(--sans);z-index:9999;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;white-space:nowrap;';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; });
+    toast.querySelector('#copy-email-btn').addEventListener('click', function() {
+      navigator.clipboard.writeText('khandeparkaranmol@gmail.com');
+      this.textContent = 'Copied!';
+      this.style.background = '#10b981';
+      SFX.play('chime');
+    });
+    setTimeout(() => {
+      toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(20px)';
+      setTimeout(() => toast.remove(), 400);
+    }, 6000);
+  });
+})();
+
+/* ── Contextual Easter Egg: Return visitor memory ── */
+(function() {
+  const key = 'anmol_visits';
+  const lastCat = 'anmol_last_cat';
+  const visits = parseInt(localStorage.getItem(key) || '0') + 1;
+  localStorage.setItem(key, visits);
+  if (visits > 1) {
+    const prev = localStorage.getItem(lastCat);
+    const msg = prev
+      ? 'Welcome back! Last time you checked out ' + prev + '.'
+      : 'Welcome back — good to see you again.';
+    const toast = document.createElement('div');
+    toast.textContent = msg;
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-family:var(--sans);z-index:9998;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.12);white-space:nowrap;';
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; }, 1500);
+    setTimeout(() => {
+      toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(20px)';
+      setTimeout(() => toast.remove(), 400);
+    }, 5000);
+  }
+  // Track last category viewed
+  const origShowQuickCards = window._showQuickCards;
+  document.addEventListener('click', function(e) {
+    const chip = e.target.closest('.prompt-chip');
+    if (chip && chip.dataset.category) {
+      localStorage.setItem(lastCat, chip.dataset.category.charAt(0).toUpperCase() + chip.dataset.category.slice(1));
+    }
+  });
+})();
+
+/* ── Contextual Easter Egg: DevTools detection ── */
+(function() {
+  let devtoolsOpen = false;
+  const threshold = 160;
+  function check() {
+    const w = window.outerWidth - window.innerWidth > threshold;
+    const h = window.outerHeight - window.innerHeight > threshold;
+    if ((w || h) && !devtoolsOpen) {
+      devtoolsOpen = true;
+      console.log('%c\n 👀 A fellow developer!', 'font-size:18px;font-weight:bold;color:#6366f1;');
+      console.log('%c Yes, this whole site is one HTML file. No frameworks, no build tools.', 'font-size:13px;color:#888;');
+      console.log('%c Impressed? Imagine what Anmol could do with your stack.', 'font-size:13px;color:#888;');
+      console.log('%c\n Try: anmol.status()  |  anmol.hire()', 'font-size:12px;color:#22C55E;');
+    }
+    if (!w && !h) devtoolsOpen = false;
+  }
+  setInterval(check, 1000);
+})();
+
+/* ── Contextual Easter Egg: Text selection quip ── */
+(function() {
+  let cooldown = false;
+  const quips = [
+    'Good eye — that\'s the best part.',
+    'Noted. Sharing with the team?',
+    'You have excellent taste.',
+    'That\'s the line that closes the deal.',
+    'Screenshot this one.',
+  ];
+  document.addEventListener('mouseup', function(e) {
+    const sel = window.getSelection().toString().trim();
+    if (!sel || sel.length < 10 || sel.length > 200 || cooldown) return;
+    cooldown = true;
+    setTimeout(() => cooldown = false, 15000);
+    const tip = document.createElement('div');
+    tip.textContent = quips[Math.floor(Math.random() * quips.length)];
+    tip.style.cssText = 'position:fixed;z-index:9999;background:#6366f1;color:#fff;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;font-family:var(--sans);pointer-events:none;opacity:0;transform:translateY(4px);transition:all 0.3s ease;white-space:nowrap;';
+    tip.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
+    tip.style.top = (e.clientY - 36) + 'px';
+    document.body.appendChild(tip);
+    requestAnimationFrame(() => { tip.style.opacity = '1'; tip.style.transform = 'translateY(0)'; });
+    setTimeout(() => {
+      tip.style.opacity = '0'; tip.style.transform = 'translateY(-4px)';
+      setTimeout(() => tip.remove(), 300);
+    }, 2500);
   });
 })();
 
