@@ -59,7 +59,6 @@
 [data-theme="dark"] .status.upcoming { background: rgba(255,255,255,0.06); }
 [data-theme="dark"] .card-tech span { background: rgba(255,255,255,0.05); }
 [data-theme="dark"] .hero-photo { border-color: var(--bg); }
-[data-theme="dark"] #konami-bg { background: #000; }
 
 /* ── Theme toggle ── */
 .theme-toggle {
@@ -101,17 +100,6 @@ nav {
 }
 nav.scrolled { border-bottom-color: var(--border2); box-shadow: 0 1px 12px rgba(0,0,0,0.04); }
 .nav-name { font-family: var(--display); font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.3px; }
-.nav-links { display: flex; gap: 32px; list-style: none; }
-.nav-links a {
-  font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none;
-  transition: color 0.2s; position: relative;
-}
-.nav-links a:hover { color: var(--text); }
-.nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-  background: var(--text); border-radius: 1px; transition: width 0.3s var(--ease);
-}
-.nav-links a:hover::after { width: 100%; }
 .nav-status {
   font-family: var(--mono); font-size: 11px; color: var(--green);
   display: flex; align-items: center; gap: 6px;
@@ -131,7 +119,7 @@ nav.scrolled { border-bottom-color: var(--border2); box-shadow: 0 1px 12px rgba(
 
 /* ── Noise texture overlay ── */
 body::before {
-  content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
   opacity: 0.028;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat; background-size: 256px;
@@ -366,17 +354,6 @@ body::before {
   border-color: transparent; box-shadow: 0 4px 16px rgba(99,102,241,0.30);
   transform: translateY(-1px);
 }
-.prompt-chip[data-type="api"] {
-  color: #6366f1; font-weight: 600;
-}
-[data-theme="dark"] .prompt-chip[data-type="api"] { color: #818cf8; }
-.prompt-chip[data-type="api"]:hover {
-  color: #4f46e5; background: rgba(99,102,241,0.08);
-  border-color: rgba(99,102,241,0.20);
-}
-[data-theme="dark"] .prompt-chip[data-type="api"]:hover {
-  color: #a5b4fc; background: rgba(99,102,241,0.14);
-}
 .prompt-sep {
   width: 1px; height: 20px; background: var(--border); align-self: center; flex-shrink: 0;
 }
@@ -540,49 +517,6 @@ section { padding: 100px 0; position: relative; }
   content: ''; flex: 1; height: 1px; background: var(--border);
 }
 
-/* ── Projects ── */
-.projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-.project-card {
-  background: #111119; border-radius: var(--radius);
-  border: 1px solid #2a2a3e;
-  text-decoration: none; color: #e8e8f0;
-  transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
-  display: flex; flex-direction: column;
-  position: relative; z-index: 1; overflow: hidden;
-}
-.project-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--card-color, #2a2a2a);
-  box-shadow:
-    0 8px 40px rgba(0,0,0,0.4),
-    0 0 40px color-mix(in srgb, var(--card-color, #2a2a2a) 20%, transparent),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-}
-.card-accent-bar { height: 4px; border-radius: var(--radius) var(--radius) 0 0; transition: height 0.4s var(--ease), box-shadow 0.4s var(--ease); }
-.project-card:hover .card-accent-bar { height: 6px; box-shadow: 0 4px 24px currentColor; }
-.project-card.locked { opacity: 0.55; border-style: dashed; }
-.project-card.locked:hover { border-color: #2a2a3e; box-shadow: none; opacity: 0.55; }
-.card-body { padding: 28px; flex: 1; display: flex; flex-direction: column; }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.card-header h3 {
-  font-family: var(--display); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #f0f0f8;
-}
-.status {
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  padding: 4px 12px; border-radius: 100px; letter-spacing: 0.5px;
-}
-.status.shipped { background: rgba(0,0,0,0.06); color: var(--text2); }
-.status.upcoming { background: rgba(0,0,0,0.06); color: var(--muted); }
-.card-tagline { font-size: 15px; color: #8a8a9a; font-style: italic; margin-bottom: 12px; }
-.card-desc { font-size: 15px; color: #b0b0c8; line-height: 1.7; flex: 1; }
-.card-tech {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding-top: 16px;
-  border-top: 1px solid #222236;
-}
-.card-tech span {
-  font-family: var(--mono); font-size: 11px; color: #7a7a9a;
-  padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 6px;
-}
 
 /* ── Site credit ── */
 .site-credit {
@@ -617,21 +551,6 @@ section { padding: 100px 0; position: relative; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Konami ── */
-#konami {
-  position: fixed; inset: 0; z-index: 99999;
-  pointer-events: none; opacity: 0; transition: opacity 0.6s;
-}
-#konami.active { opacity: 1; pointer-events: auto; }
-#konami-bg { position: absolute; inset: 0; background: #07070f; }
-#konami-content {
-  position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  font-family: var(--mono); color: #00ff88;
-}
-#konami-content h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 0 30px rgba(0,255,136,0.5); }
-#konami-content p { color: rgba(0,255,136,0.5); font-size: 13px; }
-.scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px); pointer-events: none; }
 
 /* ── Confetti ── */
 .confetti {
@@ -682,7 +601,7 @@ section { padding: 100px 0; position: relative; }
 
 /* ── Radial wipe ── */
 .theme-wipe {
-  position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 10001;
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -771,15 +690,6 @@ section { padding: 100px 0; position: relative; }
 <div class="toast" id="toast"></div>
 <!-- idle-nudge and conviction-popup removed — search-bar-only mode -->
 
-<div id="konami">
-  <div id="konami-bg"></div>
-  <div class="scanlines"></div>
-  <div id="konami-content">
-    <h2>▶ RETRO MODE ACTIVATED</h2>
-    <p>↑↑↓↓←→←→BA — you know your classics.</p>
-    <p style="margin-top:16px;font-size:11px;opacity:0.3;">returning in 5 seconds...</p>
-  </div>
-</div>
 
 <script>
 (function(){
@@ -920,7 +830,7 @@ if (themeBtn) {
     SFX.play('toggle');
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
-    const nextBg = next === 'dark' ? '#0f0f17' : '#fafaf8';
+    const nextBg = next === 'dark' ? '#0f0f17' : '#FFFFFF';
 
     // Calculate wipe size to cover the entire viewport
     const rect = newThemeBtn.getBoundingClientRect();
@@ -1087,11 +997,7 @@ if (chaiEl) chaiEl.addEventListener('click', e => {
   }
 });
 
-/* ── Konami code ── */
-const ks=[38,38,40,40,37,39,37,39,66,65]; let ki=0;
-document.addEventListener('keydown', e => {
-  if(e.keyCode===ks[ki]){ki++;if(ki===ks.length){ki=0;$('#konami').classList.add('active');setTimeout(()=>$('#konami').classList.remove('active'),5000);}}else ki=0;
-});
+/* ── Konami code — handled by anti-gravity easter egg below ── */
 
 /* ── Type "hireme" ── */
 const hs='hireme'; let hi=0;
@@ -1157,9 +1063,14 @@ window.anmol={
     { id: 'exp-ut-gra', section: 'experience', title: 'Graduate Research Assistant — Simulations & Game Applications Lab, UT Austin (2019)', body: 'Built UI and refactored codebase for Environ, an educational game about global decision-making. Reduced game size by 37%. Published to the Mac App Store. Featured in the Austin Chronicle.', tags: 'experience,research,games,unity,ui,engineering,austin,ut' },
     { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'Focus on Human-Computer Interaction. 3.94 GPA, Top 2% of class. B.Tech in CS plus a Master\'s in Computer Science — doesn\'t just write code, understands it.', tags: 'education,cs,hci,research,ux,ai,masters' },
     { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: 'education,cs,engineer,india' },
-    { id: 'skills-ai', section: 'skills', title: 'AI & ML Skills', body: 'LLM APIs, Agentic AI, Claude Code, Claude API, RAG, Eval Harnesses, ML Modeling.', tags: 'ai,ml,llm,agent,rag,data,pipeline,eval,claude' },
-    { id: 'skills-eng', section: 'skills', title: 'Engineering Skills', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Data Science.', tags: 'engineer,python,swift,typescript,sql,data,build,supabase' },
-    { id: 'skills-prod', section: 'skills', title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing.', tags: 'product,pm,strategy,user,research,ux,roadmap' }
+    { id: 'skills-ai', section: 'skills', title: 'AI & ML Skills', body: 'LLM APIs (Claude, OpenAI), Agentic AI, Multi-Agent Systems, RAG (hybrid embedding + keyword retrieval), Eval Harnesses, Prompt Engineering, ML Modeling, Model-Tier Routing.', tags: 'ai,ml,llm,agent,rag,data,pipeline,eval,claude,prompt,routing' },
+    { id: 'skills-eng', section: 'skills', title: 'Engineering Skills', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Deno/Edge Functions, Claude Code, Claude API, Jina AI, Data Pipelines, Git, CI/CD.', tags: 'engineer,python,swift,typescript,sql,data,build,supabase,deno,jina,git' },
+    { id: 'skills-prod', section: 'skills', title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing, Sprint Planning, Cross-Functional Leadership (Engineering, Data Science, UX), Stakeholder Management, 0-to-1 Product Launches.', tags: 'product,pm,strategy,user,research,ux,roadmap,prd,sprint,leadership,launch' },
+    { id: 'about-builder', section: 'about', title: 'About Anmol — Builder by instinct', body: 'Can\'t encounter a problem without wanting to prototype a solution. Shipped VR games, then pivoted to Product Management, and now he\'s built a multi-agent social deduction game — follows curiosity wherever it goes.', tags: 'about,personality,builder,curious,prototype,vr' },
+    { id: 'about-journey', section: 'about', title: 'About Anmol — Mumbai to Austin to Dallas', body: 'Grew up in Mumbai, grad school in Austin, shipped production AI at Goldman in Dallas. Code-switches between cultures, teams, and time zones easily.', tags: 'about,mumbai,austin,dallas,india,culture,background' },
+    { id: 'about-gaming', section: 'about', title: 'About Anmol — Gaming brain', body: 'Analyzes esports metas and competitive game balance with the same rigor he brings to product funnels. If it\'s a system with hidden variables and emergent behavior, he\'s already thinking about it.', tags: 'about,gaming,esports,competitive,systems' },
+    { id: 'hire-tldr', section: 'hire', title: 'Why Hire Anmol — TL;DR', body: '4 years at Goldman Sachs. 3 production AI systems. 15+ engineers led. 2 indie AI products shipped solo. AI Product Manager who writes PRDs and prototypes. Built an LLM workflow that cut MD research time by 70%, an ML system that reduced payment ops costs by 70%, and a 0-to-1 fintech platform that hit $10M+ volume in its first year. Then went home and built a multi-agent iOS game and an AI deal-sourcing tool for fun.', tags: 'hire,candidate,why,impact,metric,leadership,ai,ml,ship,build,recruit' },
+    { id: 'hire-diff', section: 'hire', title: 'Why Hire Anmol — What makes him different', body: 'Most PMs spec. Anmol specs, builds, and evals. He designed a RAG pipeline with hybrid retrieval and source-linked outputs — then built the eval harness to benchmark it against MDs. He architected an ML monitoring system — then sat with ops teams to watch it catch failing payments in real time. He doesn\'t hand off and wait. He ships and iterates.', tags: 'hire,candidate,why,different,unique,eval,build,ship,rag,ml,recruit' }
   ];
 
   /* ── BM25 Retrieval ── */
@@ -1857,6 +1768,9 @@ console.log('%c' +
   document.addEventListener('copy', function() {
     if (shown) return;
     shown = true;
+    // Dismiss return-visitor toast if still showing
+    const rt = document.getElementById('return-toast');
+    if (rt) { rt.style.opacity = '0'; setTimeout(() => rt.remove(), 300); }
     const toast = document.createElement('div');
     toast.innerHTML = 'Sharing with the team? <button id="copy-email-btn" style="background:#6366f1;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-left:6px;font-family:var(--sans);">Copy his email</button>';
     toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-family:var(--sans);z-index:9999;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.12);display:flex;align-items:center;white-space:nowrap;';
@@ -1887,6 +1801,7 @@ console.log('%c' +
       ? 'Welcome back! Last time you checked out ' + prev + '.'
       : 'Welcome back — good to see you again.';
     const toast = document.createElement('div');
+    toast.id = 'return-toast';
     toast.textContent = msg;
     toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-family:var(--sans);z-index:9998;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 32px rgba(0,0,0,0.12);white-space:nowrap;';
     document.body.appendChild(toast);
@@ -1897,7 +1812,6 @@ console.log('%c' +
     }, 5000);
   }
   // Track last category viewed
-  const origShowQuickCards = window._showQuickCards;
   document.addEventListener('click', function(e) {
     const chip = e.target.closest('.prompt-chip');
     if (chip && chip.dataset.category) {
