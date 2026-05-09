@@ -1416,6 +1416,8 @@ window.anmol={
     const query = promptBar.value.trim();
     if (!query || isStreaming) return;
     SFX.play('click');
+    // Clear any active chip highlight
+    $$('.prompt-chip').forEach(c => c.classList.remove('active'));
     // Check if it matches a quick category (exact or contains)
     const lower = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
 
