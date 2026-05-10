@@ -1078,7 +1078,7 @@ window.anmol={
     { id: 'exp-formlabs', section: 'experience', title: 'Software PM Intern at Formlabs (2021)', body: '$2B 3D printing company. Launched online shopping for Form 3L/3BL. Diagnosed 47% config drop-off, built guided questionnaire — cut drop-off to 28%, +23% conversion, +18% AOV, ~35% fewer support tickets. $2M+ projected revenue. 12 usability tests, 1000+ survey responses.', tags: 'product,pm,hardware,ecommerce,usability,ux,research,user,build,ab-testing,work,worked,experience,job,career,formlabs' },
     { id: 'exp-civitas', section: 'experience', title: 'PM Intern at Civitas Learning (2019)', body: 'EdTech, $350M. Saved $140K by killing scaling investment in a $5M ARR product through business-case analysis presented to Head of Product.', tags: 'product,pm,data,analytics,education,user,research,impact,metric,work,worked,experience,job,career,civitas' },
     { id: 'exp-palindrome', section: 'experience', title: 'Software Engineer at PalindromeVR (2016–2018)', body: 'Shipped 2 VR titles end-to-end on Google Daydream. 4.1-star rating across 12 countries.', tags: 'engineer,gaming,vr,build,ship,google,work,worked,experience,job,career,palindrome' },
-    { id: 'exp-musigma', section: 'experience', title: 'Decision Scientist at Mu Sigma (2015–2016)', body: '$1.5B decision sciences firm. Built ad analytics framework for Fortune 200 retailer. 200+ campaigns/month, ~$1.3M profit impact.', tags: 'data,analytics,advertising,metric,impact' },
+    { id: 'exp-musigma', section: 'experience', title: 'Decision Scientist at Mu Sigma (2015–2016)', body: '$1.5B decision sciences firm. Built ad analytics framework for a Fortune 200 retailer processing 200+ campaigns per month, ~$1.3M profit impact.', tags: 'data,analytics,decision,science,mu,sigma,musigma,work,worked,experience,job,career,ads,campaign,retail,advertising,metric,impact' },
     { id: 'exp-ut-gra', section: 'experience', title: 'Graduate Research Assistant — Simulations & Game Applications Lab, UT Austin (2019)', body: 'Built UI and refactored codebase for Environ, an educational game about global decision-making. Reduced game size by 37%. Published to the Mac App Store. Featured in the Austin Chronicle.', tags: 'experience,research,games,unity,ui,engineering,austin,ut' },
     { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'Focus on Human-Computer Interaction. 3.94 GPA, Top 2% of class. B.Tech in CS plus a Master\'s in Computer Science — doesn\'t just write code, understands it.', tags: 'education,cs,hci,research,ux,ai,masters,study,studied,school,university,degree,college,gpa,ut,austin,texas' },
     { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: 'education,cs,engineer,india,study,studied,school,university,degree,college,mumbai,nmims,btech' },
@@ -1188,44 +1188,8 @@ window.anmol={
     aiResponse.classList.add('show');
     chipContainer.style.display = 'none';
 
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    aiResponseText.innerHTML = '';
-    aiResponseText.appendChild(cursor);
-
-    try {
-      const res = await fetch(SUPABASE_FN_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, chunks: retrieved.map(c => ({ title: c.title, body: c.body, section: c.section })) })
-      });
-
-      if (!res.ok) throw new Error(res.status);
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const lines = decoder.decode(value, { stream: true }).split('\n');
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6);
-          if (data === '[DONE]') continue;
-          try {
-            const p = JSON.parse(data);
-            if (p.text) { fullText += p.text; aiResponseText.textContent = fullText; aiResponseText.appendChild(cursor); if (fullText.length % 5 === 0) SFX.play('tick'); }
-          } catch(e) { /* skip */ }
-        }
-      }
-      setTimeout(() => cursor.remove(), 1500);
-    } catch (err) {
-      console.warn('RAG API unavailable, using fallback:', err.message);
-      const fallback = buildFallback(query, retrieved);
-      await streamLocal(aiResponseText, fallback);
-    }
+    const response = buildFallback(query, retrieved);
+    await streamLocal(aiResponseText, response);
 
     isStreaming = false;
     promptBar.classList.remove('loading');
@@ -1238,99 +1202,104 @@ window.anmol={
     const top = retrieved[0];
     const topSection = top.section;
 
+    // Project-name detection — override section routing when user mentions a specific project
+    const isMoleQuery = lower.includes('mole');
+    const isFundQuery = lower.includes('fund') || lower.includes('matcher') || lower.includes('pe fund');
+    if (isMoleQuery || isFundQuery) {
+      const projectKey = isMoleQuery ? 'proj-mole' : 'proj-fund';
+      const wantsMore = lower.includes('more') || lower.includes('detail') || lower.includes('deep') || lower.includes('architecture') || lower.includes('how') || lower.includes('work') || lower.includes('tech') || lower.includes('pipeline') || lower.includes('stage');
+      if (projectKey === 'proj-mole') {
+        return 'The Mole is an adversarial multi-agent social deduction game for iOS. 4 autonomous AI agents with persistent cognitive state and belief propagation across 5 investigation rounds — one agent has a hidden objective, and every conversation is emergent, not scripted.\n\nArchitecture: a think-act-speak loop that updates trust models and dynamically adjusts strategy from live conversation signals. A game orchestrator manages concurrent agent API calls, model-tier routing (Sonnet for adversarial roles, Haiku for innocents), and role-specific prompt chains with hidden objectives — optimizing cost vs. intelligence tradeoffs. Every mystery is written from scratch with original characters and settings.\n\nBuilt end-to-end with Claude Code, Swift, Claude API, and Supabase.';
+      }
+      if (projectKey === 'proj-fund') {
+        if (wantsMore) {
+          return 'The AI PE Fund Matcher takes a company URL and returns ranked PE fund matches in 18 seconds — replacing 2-4 hours of manual research.\n\n5-stage pipeline: (1) Jina AI Reader converts any company URL — including React SPAs — into clean markdown. (2) Claude API with tool calling and schema enforcement extracts sector, revenue, size, HQ into guaranteed structured JSON. Tool calling prevents hallucinated fields. (3) Rule-based filters eliminate mismatches, cutting 500+ funds to ~15 candidates — fast and cheap. (4) Claude reasons across finalists, scoring on thesis fit, portfolio pattern, and deal size. (5) Ranked output with plain-English reasoning for each match.\n\nKey design decision: hybrid rules + LLM instead of pure LLM. Asking an LLM to reason across 500 funds is expensive, slow, and drifts. Hard rules handle the obvious cuts, then LLM handles the nuanced judgment. 95% accuracy at $0.33/query vs ~$400 industry benchmark.';
+        }
+        return 'The AI PE Fund Matcher takes a company URL and returns a ranked shortlist of private equity funds most likely to acquire that company — with plain-English reasoning for each match.\n\nThe goal: replace the 2-4 hours M&A advisors spend manually researching fund fit with an 18-second automated pipeline. 95% accuracy at $0.33 per query vs the ~$400 industry benchmark.\n\nHow it works: a 5-stage pipeline — Jina AI extracts the company\'s website into structured data, Claude API with tool calling enforces a consistent schema, rule-based filters cut 500+ funds to ~15 candidates, then Claude ranks the finalists on thesis fit, portfolio pattern, and deal size. Rules handle speed, LLM handles judgment.';
+      }
+    }
+
+    // Company-specific experience — detect by name before general routing
+    const isFormlabs = lower.includes('formlabs') || lower.includes('form 3') || lower.includes('3d print');
+    const isCivitas = lower.includes('civitas');
+    const isPalindrome = lower.includes('palindrome') || lower.includes('palindromevr');
+    const isMuSigma = lower.includes('mu sigma') || lower.includes('musigma') || lower.includes('decision scien');
+    const isUTResearch = (lower.includes('ut') || lower.includes('austin')) && (lower.includes('research') || lower.includes('lab') || lower.includes('environ'));
+
+    if (isFormlabs) {
+      return 'Anmol was a Software PM Intern at Formlabs, a $2B 3D printing manufacturer, in 2021. He launched the online shopping experience for the Form 3L and Form 3BL across 8 sprints with 6 engineers and 2 UX designers. His key insight: a 47% drop-off at the material configuration step wasn\'t a UI problem — it was a decision-support problem. Users didn\'t know which printer-material combo they needed. He reframed it from "redesign the UI" to "guide the decision" and built a questionnaire that recommended the right configuration. He proved impact through A/B testing (spec-heavy vs. guided): cut drop-off from 47% to 28%, lifted conversion +23% and AOV +18%, reduced pre-purchase support tickets by ~35%. $2M+ projected annual revenue impact, grounded in 12 usability tests and 1,000+ survey responses.';
+    }
+    if (isCivitas) {
+      return 'Anmol was a PM Intern at Civitas Learning, a $350M EdTech company, in 2019. The company was planning to scale a $5M ARR product — Anmol ran the business-case analysis, concluded the investment wasn\'t justified by the unit economics, and presented the recommendation directly to the Head of Product. They killed the scaling investment, saving $140K. It was a formative PM lesson: sometimes the most impactful thing you can do is say no with data and save the company from a bad bet.';
+    }
+    if (isPalindrome) {
+      return 'Anmol was a Software Engineer at PalindromeVR in Mumbai from 2016 to 2018. He shipped 2 VR titles end-to-end on Google Daydream — from concept through development to launch across 12 countries, earning a 4.1-star rating. This was his first professional engineering role and the foundation of his builder instinct. It\'s why he doesn\'t just spec products and hand them off — he\'s actually shipped software as an engineer, and that shapes how he works with dev teams today.';
+    }
+    if (isMuSigma) {
+      return 'Anmol was a Decision Scientist at Mu Sigma, a $1.5B decision sciences firm, in Bengaluru from 2015 to 2016. He built an ad analytics framework for a Fortune 200 retailer that processed 200+ campaigns per month, driving ~$1.3M in profit impact. This was his first exposure to data-driven product thinking — analyzing campaign performance at scale and translating analytics into business decisions.';
+    }
+    if (isUTResearch) {
+      return 'Anmol was a Graduate Research Assistant at UT Austin\'s Simulations & Game Applications Lab in 2019. He built the UI and refactored the codebase for Environ, an educational game about global decision-making — reducing the game size by 37%. He published Environ to the Mac App Store, where it was featured in the Austin Chronicle.';
+    }
+
+    // Goldman Sachs — detect by name or finance/fintech context
+    const isGoldman = lower.includes('goldman') || lower.includes('sachs') || lower.includes(' gs ') || lower === 'gs' || lower.startsWith('gs ') || lower.endsWith(' gs') || lower.includes('finance') || lower.includes('fintech') || lower.includes('investment bank');
+    if (isGoldman) {
+      if (lower.includes('deal') || lower.includes('pricing')) return 'At Goldman, Anmol conceived and shipped an LLM-enabled Deal Pricing workflow on top of the existing case-management system, replacing Excel-based MD workflows.\n\nHe ran consulting-style discovery — 50+ shadow sessions and structured interviews embedded with MDs, Coverage, and Ops — and reframed the roadmap from "AI advisor" to workflow-first process automation, then LLM augmentation.\n\nPhase 1: digitized deal submission, validation rules, and automated approval routing — establishing the system-of-record before layering in AI.\n\nPhase 2: architected RAG decision-support with hybrid embedding + keyword retrieval, every output source-linked with strict scope-based refusal. Led 6-8 engineers, built an MD-benchmarked eval suite measuring accuracy, hallucination rate, and citation completeness.\n\nCut MD pricing research from 5-10 min to 2-3 min per deal, reduced data-entry errors by ~90-95%.';
+      if (lower.includes('payment') || lower.includes('monitor')) return 'At Goldman, Anmol built and shipped an ML-driven intelligent monitoring system for Payment Operations partners monitoring non-STP payments.\n\nHe conducted 15 user interviews — consulting-style discovery embedded with global ops analysts — to identify root-cause friction.\n\nShipped across three phases: proactive monitoring rules that flag likely failures based on historical patterns, automated in-case context delivery so analysts stop wasting time pulling info manually, and ML-driven prioritization ranking payments by failure likelihood and urgency.\n\nDrove a cross-functional team of 15+ engineers, 2 UX designers, and 4 data scientists across 30+ sprints — authored product specs, led sprint grooming and planning, coordinated UATs and weekly releases.\n\nCut average time per payment by ~50% and monitoring cost by ~70%.';
+      if (lower.includes('lending') || lower.includes('platform') || lower.includes('b2b')) return 'Anmol built and launched a Machine Learning-driven B2B Fintech platform from 0 to 1 at Goldman Sachs, delivering real-time liquidity solutions and intelligent payment optimization to sellers.\n\nHe architected the product strategy and multi-year roadmap — integrating dynamic discounting, algorithmic risk-based pricing, and ML-powered underwriting with real-time decisioning.\n\nHe authored requirements for a horizontally scalable lending API integrated across enterprise marketplaces and closed 50+ UAT conditions across Legal, Compliance, FCC, Engineering, and Operations.\n\nThe ML underwriting uses separated model and policy layers — tunable approval thresholds, pricing curves, and exposure limits without retraining.\n\n$10M+ financial volume within 12 months, 40% higher approvals, 25% lower default risk.';
+      // General Goldman / GS / finance / fintech question
+      return 'Anmol spent 4 years at Goldman Sachs (2022-2026) as a Product Manager on AI/ML Products and Internal AI Enablement.\n\nHe conceived and shipped an LLM-enabled Deal Pricing workflow — ran 50+ consulting-style shadow sessions with MDs, reframed the roadmap from "AI advisor" to workflow-first automation, then layered in RAG with hybrid retrieval and source-linked outputs. Cut MD research from 5-10 min to 2-3 min per deal, ~90-95% fewer data-entry errors. Built the eval harness himself.\n\nHe built an ML Payment Monitoring system — conducted 15 user interviews embedded with global ops analysts, shipped across three phases (proactive monitoring rules, automated context delivery, ML-driven prioritization). Drove a cross-functional team of 15+ engineers, 2 UX designers, and 4 data scientists across 30+ sprints. Cut time per payment by ~50% and ops cost by ~70%.\n\nHe launched a 0→1 ML-driven B2B Fintech platform — dynamic discounting, algorithmic pricing, ML underwriting with separated model and policy layers. $10M+ volume in 12 months, 40% higher approvals, 25% lower default risk.';
+    }
+
     // Hire — full pitch
     if (lower.includes('hire') || lower.includes('recruit') || lower.includes('candidate')) {
-      return 'Here\'s the case: Anmol shipped three production AI/ML systems at Goldman Sachs in 4 years. His LLM-powered Deal Pricing workflow uses RAG with hybrid retrieval and source-linked outputs — cut MD research time by 70% with ~90% fewer errors. He built the eval harness himself. His ML Payment Monitoring system flags failing payments proactively — 50% faster per payment, 70% cost reduction. He launched a 0→1 ML fintech platform that hit $10M+ volume in 12 months. Led 15+ engineers, 4 data scientists, and 2 UX designers across 30+ sprints. On his own time: The Mole — an iOS game where 4 AI agents with persistent memory argue and bluff in social deduction rounds. The AI PE Fund Matcher — takes a company URL and returns ranked PE fund matches in 18 seconds at 95% accuracy ($0.33/query vs $400 industry benchmark). M.S. from UT Austin, 3.94 GPA, top 2%. Most PMs spec and hand off. Anmol specs, builds, and evals.';
+      return 'Here\'s the case: Anmol spent 4 years at Goldman Sachs shipping AI/ML products. He conceived and shipped an LLM Deal Pricing workflow — ran 50+ consulting-style shadow sessions with MDs, reframed the roadmap from "AI advisor" to workflow-first automation, then layered in RAG with hybrid retrieval and source-linked outputs. Cut MD research from 5-10 min to 2-3 min per deal, ~90-95% fewer data-entry errors. He built the eval harness himself. His ML Payment Monitoring system — proactive rules, automated context delivery, ML prioritization — cut ~50% time per payment and ~70% ops cost. He launched a 0→1 ML fintech platform: dynamic discounting, algorithmic pricing, ML underwriting with separated model and policy layers. $10M+ volume in 12 months, 40% higher approvals, 25% lower default risk. Led 15+ engineers, 4 data scientists, 2 UX designers across 30+ sprints. On his own time he builds with Claude Code and Cursor: The Mole — an iOS game with 4 AI agents running persistent belief matrices and model-tier routing. The AI PE Fund Matcher — 5-stage pipeline, 18 seconds at 95% accuracy, $0.33/query vs $400 manual. M.S. from UT Austin, 3.94 GPA, top 2%. Most PMs spec and hand off. Anmol specs, builds, and evals.';
     }
 
-    // Project-specific deep dives
+    // Generic project — first 3 sentences
     if (topSection === 'projects') {
-      // Find all project chunks that share the same project (by ID prefix)
-      const projectKey = top.id.split('-').slice(0, 2).join('-'); // e.g. "proj-mole"
-      const related = retrieved.filter(c => c.id.startsWith(projectKey));
-      if (related.length > 1) {
-        // Combine overview + deep dive naturally
-        const overview = related.find(c => !c.id.includes('arch') && !c.id.includes('pipeline') && !c.id.includes('output') && !c.id.includes('writing'));
-        const deepDives = related.filter(c => c !== overview);
-        let response = overview ? overview.body : related[0].body;
-        deepDives.forEach(c => { response += '\n\n' + c.body; });
-        return response;
-      }
-      // Single chunk — return the full body
-      return top.body;
+      return top.body.split('.').slice(0, 3).join('.') + '.';
     }
 
-    // Experience deep dives — Goldman products
+    // Experience
     if (topSection === 'experience') {
-      const gsChunks = retrieved.filter(c => c.id.startsWith('exp-gs'));
       const isGSSpecific = lower.includes('goldman') || lower.includes('deal') || lower.includes('payment') || lower.includes('fintech') || lower.includes('lending');
-      if (isGSSpecific && gsChunks.length) {
-        // Specific Goldman deep dive question
-        const deepDive = gsChunks.find(c =>
-          (lower.includes('deal') && c.id.includes('deal')) ||
-          (lower.includes('payment') && c.id.includes('payment')) ||
-          ((lower.includes('fintech') || lower.includes('lending')) && c.id.includes('fintech'))
-        );
-        if (deepDive) return deepDive.body;
-        // General Goldman question — return overview
-        const overview = gsChunks.find(c => c.id === 'exp-gs');
-        if (overview) return overview.body;
+      if (isGSSpecific) {
+        if (lower.includes('deal')) return 'At Goldman, Anmol conceived and shipped an LLM-enabled Deal Pricing workflow on top of the existing case-management system, replacing Excel-based MD workflows. He ran consulting-style discovery — 50+ shadow sessions and structured interviews embedded with MDs, Coverage, and Ops — and reframed the roadmap from "AI advisor" to workflow-first process automation, then LLM augmentation. Phase 1: digitized deal submission, validation rules, and automated approval routing — establishing the system-of-record before layering in AI. Phase 2: architected RAG decision-support with hybrid embedding + keyword retrieval, every output source-linked with strict scope-based refusal. Led 6-8 engineers, built an MD-benchmarked eval suite measuring accuracy, hallucination rate, and citation completeness. Cut MD pricing research from 5-10 min to 2-3 min per deal, reduced data-entry errors by ~90-95%.';
+        if (lower.includes('payment')) return 'At Goldman, Anmol built and shipped an ML-driven intelligent monitoring system for Payment Operations partners monitoring non-STP payments. He conducted 15 user interviews — consulting-style discovery embedded with global ops analysts — to identify root-cause friction. Shipped across three phases: proactive monitoring rules that flag likely failures based on historical patterns, automated in-case context delivery so analysts stop wasting time pulling info manually, and ML-driven prioritization ranking payments by failure likelihood and urgency. Drove a cross-functional team of 15+ engineers, 2 UX designers, and 4 data scientists across 30+ sprints — authored product specs, led sprint grooming and planning, coordinated UATs and weekly releases. Cut average time per payment by ~50% and monitoring cost by ~70%.';
+        if (lower.includes('fintech') || lower.includes('lending')) return 'Anmol built and launched a Machine Learning-driven B2B Fintech platform from 0 to 1 at Goldman Sachs, delivering real-time liquidity solutions and intelligent payment optimization to sellers. He architected the product strategy and multi-year roadmap — integrating dynamic discounting, algorithmic risk-based pricing, and ML-powered underwriting with real-time decisioning. He authored requirements for a horizontally scalable lending API integrated across enterprise marketplaces and closed 50+ UAT conditions across Legal, Compliance, FCC, Engineering, and Operations. The ML underwriting uses separated model and policy layers — tunable approval thresholds, pricing curves, and exposure limits without retraining. $10M+ financial volume within 12 months, 40% higher approvals, 25% lower default risk.';
+        return 'Anmol spent 4 years at Goldman Sachs (2022-2026) as a Product Manager on AI/ML Products and Internal AI Enablement. He shipped three production systems: an LLM Deal Pricing workflow (RAG + hybrid retrieval, source-linked outputs, MD-benchmarked eval suite), an ML Payment Monitoring system (proactive rules, automated context delivery, ML prioritization), and a 0-to-1 ML fintech lending platform (dynamic discounting, algorithmic pricing, ML underwriting). Led 15+ engineers, 4 data scientists, and 2 UX designers across 30+ sprints.';
       }
-      // General experience question — show all roles
-      const allExp = retrieved.filter(c => c.section === 'experience');
-      if (allExp.length > 1) {
-        const overview = allExp.find(c => c.id === 'exp-gs');
-        if (overview) {
-          let response = overview.body;
-          const others = allExp.filter(c => c !== overview && !c.id.includes('-deal') && !c.id.includes('-payment') && !c.id.includes('-fintech'));
-          if (others.length) {
-            response += '\n\nBefore Goldman: ' + others.map(c => c.title + ' — ' + c.body.split('.').slice(0, 2).join('.') + '.').join(' ');
-          }
-          return response;
-        }
-      }
-      return top.body;
+      return 'Anmol spent 4 years at Goldman Sachs shipping AI/ML products — an LLM Deal Pricing workflow (50+ shadow sessions, RAG with hybrid retrieval, self-built eval harness), ML Payment Monitoring (15 user interviews, three-phase rollout, ~50% faster per payment), and a 0→1 ML fintech platform ($10M+ volume in year one). Before that: PM at Formlabs (diagnosed 47% drop-off, built guided questionnaire, +23% conversion), PM at Civitas Learning (saved $140K killing a bad investment), Decision Scientist at Mu Sigma (ad analytics for Fortune 200 retailer, ~$1.3M profit impact), and Software Engineer at PalindromeVR (2 VR titles, 4.1★ across 12 countries).';
     }
 
     // Education
     if (topSection === 'education') {
-      const eduChunks = retrieved.filter(c => c.section === 'education');
-      if (eduChunks.length > 1) {
-        return eduChunks.map(c => c.body).join('\n\n');
-      }
-      return top.body;
+      return 'M.S. in Information Science from UT Austin (2018-2021), focused on Human-Computer Interaction. 3.94 GPA, top 2% of class. B.Tech in Computer Science from NMIMS Mumbai (2011-2015) — algorithms, data structures, systems, databases. The full CS foundation means he doesn\'t just spec products — he understands the engineering underneath, which shapes how he writes specs, evaluates technical tradeoffs, and works with dev teams.';
     }
 
     // Skills
     if (topSection === 'skills') {
-      const skillChunks = retrieved.filter(c => c.section === 'skills');
-      if (skillChunks.length > 1) {
-        return skillChunks.map(c => c.title + ': ' + c.body).join('\n\n');
-      }
-      return top.title + ': ' + top.body;
+      return 'AI/ML & Gen AI: Python, Claude Code (Skills, Sub-agents, Hooks, MCP), Cursor, Claude API, OpenAI API, LangChain, RAG, Embeddings, Vector DBs (Pinecone), Multi-Agent Orchestration, Prompt Engineering, Eval Frameworks, TensorFlow, XGBoost.\n\nData & Analytics: SQL, BigQuery, Tableau, QuickSight, Feature Engineering, A/B Testing, Funnel & Cohort Analysis, Customer Discovery, Usability Testing.\n\nProduct: JIRA, Roadmapping, Agile/Scrum, Build-vs-Buy Evaluation, Figma, CI/CD (Git, branching strategy, automated testing, release management).';
     }
 
     // About
     if (topSection === 'about') {
       const aboutChunks = retrieved.filter(c => c.section === 'about');
-      return aboutChunks.map(c => c.body).join('\n\n');
+      return aboutChunks.map(c => c.body).join(' ');
     }
 
     // Writing
     if (topSection === 'writing') {
-      return top.body;
+      return 'Anmol writes essays about startups, venture capital, and technology. His featured piece is "The Enigma of the Valley" — an exploration of what actually makes startups succeed and why most answers are useless. He\'s also written business case studies on companies like Stamps.com and Relativity Space.';
     }
 
-    // Generic — combine top 3 chunks intelligently
-    const top3 = retrieved.slice(0, 3);
-    if (top3.length > 1 && top3.every(c => c.section === top3[0].section)) {
-      return top3.map(c => c.body).join('\n\n');
-    }
-    // Mixed sections — use the top chunk fully, add brief context from #2
-    let response = top.body;
+    // Generic — concise top chunk + brief related mention
+    let response = top.body.split('.').slice(0, 3).join('.') + '.';
     if (retrieved.length > 1) {
       const second = retrieved[1];
-      response += '\n\nRelated: ' + second.title + ' — ' + second.body.split('.').slice(0, 2).join('.') + '.';
+      response += '\n\n' + second.body.split('.').slice(0, 2).join('.') + '.';
     }
     return response;
   }
@@ -1341,14 +1310,20 @@ window.anmol={
       let i = 0;
       const cursor = document.createElement('span');
       cursor.className = 'cursor';
+      // Convert \n\n to a placeholder we can detect during streaming
+      const chars = [...text];
       (function type() {
-        if (i < text.length) {
-          const c = text[i];
-          container.textContent = text.slice(0, i + 1);
+        if (i < chars.length) {
+          const c = chars[i];
+          // Build displayed text up to current position, converting \n to <br>
+          const visible = text.slice(0, i + 1).replace(/\n/g, '<br>');
+          container.innerHTML = visible;
           container.appendChild(cursor);
-          if (i % 3 === 0) SFX.play('tick'); // tick every 3rd char to avoid overload
+          if (i % 3 === 0) SFX.play('tick');
           i++;
-          setTimeout(type, c === '—' ? 120 : c === ',' ? 80 : c === '.' ? 100 : 15 + Math.random() * 25);
+          // Pause at newlines for natural pacing
+          const delay = c === '\n' ? 60 : c === '—' ? 120 : c === ',' ? 80 : c === '.' ? 100 : 15 + Math.random() * 25;
+          setTimeout(type, delay);
         } else {
           setTimeout(() => { cursor.remove(); resolve(); }, 1500);
         }
@@ -1623,12 +1598,15 @@ window.anmol={
       experience: ['experience','work','career','jobs','job','role','roles','worked'],
       education: ['education','school','university','degree','college','study','studied','gpa'],
       skills: ['skills','skill','toolkit','tech','stack','technologies','tools'],
-      about: ['about','who','background','intro','introduction','tell me about'],
+      about: ['who is anmol','about anmol','background','intro','introduction'],
       writing: ['writing','writes','essay','essays','blog','articles','enigma','valley'],
       hire: ['hire','hiring','candidate','recruit','why hire']
     };
+    // Exact category match (e.g. "projects", "experience")
     let quickMatch = Object.keys(quickData).find(k => lower === k || lower === quickData[k].label.toLowerCase());
-    if (!quickMatch) {
+    // Keyword match — but skip if query mentions a specific topic (mole, fund, goldman, formlabs, etc.)
+    const hasSpecificTopic = /mole|fund|matcher|goldman|sachs|deal|payment|fintech|finance|investment bank|formlabs|civitas|palindrome|mu sigma|pricing|lending|monitor|\bgs\b/.test(lower);
+    if (!quickMatch && !hasSpecificTopic) {
       quickMatch = Object.keys(categoryKeywords).find(k => categoryKeywords[k].some(w => lower.includes(w)));
     }
     if (quickMatch) {
