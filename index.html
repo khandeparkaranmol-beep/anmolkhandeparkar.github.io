@@ -649,9 +649,10 @@ section { padding: 100px 0; position: relative; }
         <button class="prompt-chip" data-type="quick" data-category="projects" data-query="What projects has Anmol built?">Projects</button>
         <button class="prompt-chip" data-type="quick" data-category="experience" data-query="Where has Anmol worked?">Experience</button>
         <button class="prompt-chip" data-type="quick" data-category="education" data-query="Where did Anmol study?">Education</button>
-        <span class="chip-break"></span>
         <button class="prompt-chip" data-type="quick" data-category="skills" data-query="What are Anmol's skills?">Skills</button>
+        <span class="chip-break"></span>
         <button class="prompt-chip" data-type="quick" data-category="about" data-query="Tell me something about Anmol">About</button>
+        <button class="prompt-chip" data-type="quick" data-category="writing" data-query="What has Anmol written?">Writing</button>
         <button class="prompt-chip" data-type="quick" data-category="hire" data-query="Why should I hire Anmol?">Why hire Anmol?</button>
       </div>
 
@@ -712,7 +713,15 @@ const SFX = (() => {
   const soundBtn = document.getElementById('sound-toggle');
 
   function getCtx() {
-    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      // iOS Safari: unlock audio by playing a silent buffer on first user gesture
+      const silence = ctx.createBuffer(1, 1, ctx.sampleRate);
+      const src = ctx.createBufferSource();
+      src.buffer = silence;
+      src.connect(ctx.destination);
+      src.start();
+    }
     if (ctx.state === 'suspended') ctx.resume();
     return ctx;
   }
@@ -810,11 +819,14 @@ const SFX = (() => {
 
   // Sound toggle button
   if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
+    function toggleSound(e) {
+      if (e.type === 'touchend') e.preventDefault(); // prevent duplicate click
       enabled = !enabled;
       soundBtn.textContent = enabled ? '🔊' : '🔇';
       if (enabled) { getCtx(); play('click'); }
-    });
+    }
+    soundBtn.addEventListener('click', toggleSound);
+    soundBtn.addEventListener('touchend', toggleSound);
   }
 
   return { play };
@@ -1283,13 +1295,22 @@ window.anmol={
         { title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing, Sprint Planning, Cross-Functional Leadership (Engineering, Data Science, UX), Stakeholder Management, 0→1 Product Launches.', tags: ['PRDs','Research','A/B Testing','0→1','Leadership'] }
       ]
     },
+    writing: {
+      label: 'Writing',
+      cards: [
+        { title: 'The Enigma of the Valley', meta: 'Featured Essay · Startups & VC', body: 'What actually makes startups succeed — and why most answers are useless. A deep dive into venture capital, market dynamics, and the myths Silicon Valley tells itself.', tags: ['Startups','VC','Strategy'], link: 'enigma-of-the-valley.html' },
+        { title: 'Game Changers: Mail Domination', meta: 'Case Study · Business Strategy', body: 'How one company rewired the economics of physical mail and turned a dying industry into a tech moat.', tags: ['Business','Strategy'], link: 'game-changers-mail-domination.html' },
+        { title: 'Game Changers: Infinity and Beyond', meta: 'Case Study · Deep Tech', body: 'Relativity Space and the audacious bet on 3D-printing entire rockets — manufacturing as software.', tags: ['Deep Tech','Space'], link: 'game-changers-relativity-space.html' },
+        { title: 'Game Changer: Skill for the Kill', meta: 'Case Study · Gaming & Competition', body: 'The overlooked craft of competitive skill acquisition — what gaming, sports, and startups have in common.', tags: ['Gaming','Strategy'], link: 'game-changer-skill-for-the-kill.html' }
+      ]
+    },
     about: {
       label: 'About Anmol',
       cards: [
         { title: '🧰 Builder by instinct', body: 'Can\'t encounter a problem without wanting to prototype a solution. Shipped VR games, then pivoted to Product Management, and now he\'s built a multi-agent social deduction game — follows curiosity wherever it goes.' },
         { title: '🌏 Mumbai → Austin → Dallas', body: 'Grew up in Mumbai, grad school in Austin, shipped production AI at Goldman in Dallas. Code-switches between cultures, teams, and time zones easily.' },
         { title: '🎮 Gaming brain', body: 'Analyzes esports metas and competitive game balance with the same rigor he brings to product funnels. If it\'s a system with hidden variables and emergent behavior, he\'s already thinking about it.' },
-        { title: '✍️ Writes about ideas', body: 'Essays about startups, venture capital, and technology ("The Enigma of the Valley"). Strong opinions, loosely held — except about cardamom chai.' },
+        { title: '✍️ Writes about ideas', body: 'Essays about startups, venture capital, and technology — including <a href="enigma-of-the-valley.html" style="color:#6366f1;text-decoration:underline;text-underline-offset:2px;">The Enigma of the Valley</a>. Strong opinions, loosely held — except about cardamom chai.' },
         { title: '📬 Say hello', body: 'Looking for an AI PM role where he can ship fast with a sharp team. If you\'re building something ambitious with LLMs, agents, or ML — let\'s talk.', tags: ['Email','LinkedIn','GitHub'] }
       ]
     },
@@ -1416,6 +1437,8 @@ window.anmol={
     const query = promptBar.value.trim();
     if (!query || isStreaming) return;
     SFX.play('click');
+    // Dismiss mobile keyboard
+    if (isMobile) promptBar.blur();
     // Clear any active chip highlight
     $$('.prompt-chip').forEach(c => c.classList.remove('active'));
     // Check if it matches a quick category (exact or contains)
@@ -1486,6 +1509,7 @@ window.anmol={
       education: ['education','school','university','degree','college','study','studied','gpa'],
       skills: ['skills','skill','toolkit','tech','stack','technologies','tools'],
       about: ['about','who','background','intro','introduction','tell me about'],
+      writing: ['writing','writes','essay','essays','blog','articles','enigma','valley'],
       hire: ['hire','hiring','candidate','recruit','why hire']
     };
     let quickMatch = Object.keys(quickData).find(k => lower === k || lower === quickData[k].label.toLowerCase());
@@ -1508,10 +1532,12 @@ window.anmol={
   aiReset.addEventListener('click', resetAll);
 
   // Typewriter effect for search bar
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 768;
+
   function typeInSearchBar(text) {
     return new Promise(resolve => {
       promptBar.value = '';
-      promptBar.focus();
+      if (!isMobile) promptBar.focus();
       let i = 0;
       (function tick() {
         if (i < text.length) {
