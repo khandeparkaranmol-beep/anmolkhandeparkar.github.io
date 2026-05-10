@@ -1063,21 +1063,28 @@ window.anmol={
 
   /* ── Knowledge base ── */
   const chunks = [
-    { id: 'proj-mole', section: 'projects', title: 'The Mole', body: 'An iOS social deduction game where 4 AI agents with distinct personalities play Mafia-style rounds against each other. Each agent maintains persistent memory, updates beliefs about who is lying, and argues its case. One agent is secretly the mole. Built end-to-end with Claude Code, Swift, Claude API, and Supabase. Uses model-tier routing (Sonnet for the adversarial mole, Haiku for innocent agents).', tags: 'ai,ml,agent,game,ios,swift,security,build,product,ship,claude,supabase' },
-    { id: 'proj-fund', section: 'projects', title: 'AI PE Fund Matcher', body: 'AI deal-sourcing tool that takes a company URL, analyzes the business, and returns a ranked shortlist of PE funds most likely to acquire it. 5-stage pipeline. Reduced PE fund research from 4 hours to 18 seconds at 95% accuracy and $0.33 per query vs the $400 industry benchmark. Built with Python, Jina AI, and Claude API.', tags: 'ai,ml,python,fintech,data,pipeline,pe,venture,fund,build,product,ship' },
+    { id: 'proj-mole', section: 'projects', title: 'The Mole — Overview', body: 'An iOS mystery game where you chat with 4 AI agents to solve a case — but one of them is secretly the mole. It has a different system prompt, knows the answer, and is strategically lying to protect the culprit. You have to figure out which one. 4 AI agents sharing 1 context window with 2 different objectives. 4+ original mysteries each written from scratch with a unique cast. Every game plays differently — conversation is emergent, not scripted. Built end-to-end with Claude Code, SwiftUI, Claude API, and Supabase.', tags: 'ai,ml,agent,game,ios,swift,security,build,product,ship,claude,supabase,mole,mystery,social,deduction' },
+    { id: 'proj-mole-arch', section: 'projects', title: 'The Mole — AI Architecture (Deep Dive)', body: 'Same model. Same clues. Same chat history. Completely different behavior — because one agent has a different objective. Architecture: all 4 agents receive identical context each round — the new clue, the chat history so far, and the user\'s input. 3 investigators have a system prompt that says: "Your goal: find the truth. Reason honestly. Debate your teammates. You can be wrong — but never deliberately misleading." The mole has a system prompt that says: "The answer is [REDACTED]. Your goal: steer the group toward the wrong suspect. Sound reasonable. Don\'t get caught." Each agent has a persistent cognitive state stored in Supabase — a belief matrix tracking suspicion scores for every other agent. After each round, agents update beliefs using Bayesian-style reasoning. If an agent voted against the consensus or said something contradictory, suspicion rises. Model-tier routing: the mole uses Claude Sonnet (smarter, better at deception and maintaining consistency while lying), innocent agents use Claude Haiku (faster, cheaper, slightly more predictable — realistic for honest reasoners). Example from a live round: given a clue about financial motives, investigator Leah says "Valentina benefits more from chaos than anyone," investigator Marcus shifts suspicion to Valentina — but Jordan (the mole) steers toward the wrong suspect: "Valentina\'s a 15-season vet — she\'d never risk that. Dex is cornered financially. Desperate people do stupid things." Same clues, same chat — Jordan is steering you away from the real culprit. That\'s the game.', tags: 'ai,agent,architecture,belief,memory,routing,sonnet,haiku,swift,supabase,mole,how,work,technical,system,prompt,cognitive,bayesian,deception' },
+    { id: 'proj-mole-writing', section: 'projects', title: 'The Mole — Original Mystery Writing', body: 'Every mystery in The Mole is written from scratch by Anmol — different setting, different cast, different tone. 4+ original mysteries total. Example from Mystery #001, "The Final Rosé": a vineyard in Provence, a reality TV cast, a deleted social media post, and a bet that connects everyone to the crime. The writing aims for literary quality — atmospheric, character-driven, with planted clues that reward careful reading. The mysteries are designed so the AI agents can reason about them naturally, with enough ambiguity that the mole can plausibly deflect without being obviously wrong.', tags: 'mole,writing,mystery,creative,stories,original,game,narrative' },
+    { id: 'proj-fund', section: 'projects', title: 'AI PE Fund Matcher — Overview', body: 'M&A advisors spend 2-4 hours per client manually researching which PE funds might acquire them — limited to funds they already know. This tool takes a company URL, analyzes the business, and returns a ranked shortlist of PE fund matches with explainable reasoning in under 2 minutes. Stats: 18 seconds vs 4 hours. 95% accuracy. $0.33 per query vs $400 industry benchmark. 500+ funds covered. Built with Python, Claude API, Jina AI, Tool Calling, and Hybrid ML. Code available on Bitbucket.', tags: 'ai,ml,python,fintech,data,pipeline,pe,venture,fund,build,product,ship,matcher,accuracy,cost' },
+    { id: 'proj-fund-pipeline', section: 'projects', title: 'AI PE Fund Matcher — 5-Stage Pipeline (Deep Dive)', body: 'A sequential 5-stage pipeline where each stage feeds directly into the next: Stage 1 — Website Extraction: Jina AI Reader converts any company URL — including React SPAs and Angular apps — into clean, parseable markdown. Stage 2 — Structured Extraction: Claude API with tool calling and schema enforcement extracts sector, revenue, size, HQ into guaranteed structured JSON. Tool calling ensures deterministic inputs — free-form extraction hallucinates missing fields and returns inconsistent shapes, so schema enforcement guarantees every company profile has the same structure. Stage 3 — Rule-Based Filter: hard filters eliminate mismatched funds. Cuts 500+ funds down to ~15 candidates fast and cheap. Stage 4 — LLM Ranking: Claude reasons across the remaining candidates, scoring each on thesis fit, portfolio pattern, deal size alignment. Stage 5 — Ranked Output: 3-5 PE funds, each with plain-English reasoning. Explainable, not just a list. Key design decision: hybrid approach (rules + LLM) instead of pure LLM. Asking an LLM to reason across 500 funds at once is expensive, slow, and drifts. Hard rules eliminate the obviously wrong candidates first, then LLM reasoning handles the nuanced fit scoring. Rules for speed, LLM for judgment.', tags: 'ai,pipeline,architecture,jina,scraping,scoring,ranking,pe,fund,how,work,technical,python,cost,accuracy,tool,calling,schema,hybrid,rules,extraction,stage' },
+    { id: 'proj-fund-output', section: 'projects', title: 'AI PE Fund Matcher — Sample Output & Reasoning', body: 'Example input: FreyaVoice.ai — AI voice platform, ~$2-10M revenue, Austin TX. Output in 18.3 seconds at $0.33 API cost. Match #1: Vista Equity Partners (Score: 92) — "FreyaVoice\'s B2B SaaS model with recurring revenue aligns directly with Vista\'s thesis of acquiring profitable software businesses. AI voice infrastructure is adjacent to Vista\'s existing portfolio companies in HR and customer engagement tech. Deal size fits Vista\'s lower-middle market entry point." Match #2: Francisco Partners (Score: 84) — "Francisco\'s portfolio includes voice and speech AI companies. Strong pattern match on AI infrastructure plays at the Series A-B stage. Austin-based portfolio companies suggest comfort with the geography." Match #3: Thoma Bravo (Score: 77) — "Thoma Bravo targets software businesses with strong gross margins. FreyaVoice qualifies on business model, but deal size is at the lower end of Thoma\'s typical range. Worth a conversation at growth stage." Each match includes plain-English reasoning — not just a score, but why the fund is a fit.', tags: 'ai,fund,output,example,vista,francisco,thoma,score,reasoning,match,pe,sample,result' },
     { id: 'proj-research', section: 'projects', title: 'AI Research Paper', body: 'Original research on LLM system design patterns. Under wraps until submission.', tags: 'ai,ml,research,llm,paper' },
-    { id: 'writing-enigma', section: 'writing', title: 'The Enigma of the Valley', body: 'Featured essay on what actually makes startups succeed and why most answers are useless. Startup strategy, venture capital, market dynamics.', tags: 'startup,venture,vc,strategy,market,product' },
-    { id: 'exp-gs', section: 'experience', title: 'Product Manager — AI/ML Products at Goldman Sachs (2022–2026)', body: 'Shipped LLM Deal Pricing workflow (RAG with hybrid embedding + keyword retrieval, source-linked outputs, MD-benchmarked eval suite) — cut research from 5–10 min to 2–3 min per deal, ~90% fewer errors. Built ML Payment Monitoring — proactive rules, automated context delivery, ML prioritization by failure likelihood — ~50% faster per payment, ~70% cost reduction. Led 15+ engineers, 2 UX designers, 4 data scientists across 30+ sprints. Also launched 0→1 ML-driven B2B Fintech platform — $10M+ volume in 12 months, 40% higher approvals, 25% lower default risk.', tags: 'ai,ml,product,pm,fintech,leadership,team,hire,lending,payment,data,impact,metric,build,ship,rag,llm,eval' },
-    { id: 'exp-formlabs', section: 'experience', title: 'Software PM Intern at Formlabs (2021)', body: '$2B 3D printing company. Launched online shopping for Form 3L/3BL. Diagnosed 47% config drop-off, built guided questionnaire — cut drop-off to 28%, +23% conversion, +18% AOV, ~35% fewer support tickets. $2M+ projected revenue. 12 usability tests, 1000+ survey responses.', tags: 'product,pm,hardware,ecommerce,usability,ux,research,user,build,ab-testing' },
-    { id: 'exp-civitas', section: 'experience', title: 'PM Intern at Civitas Learning (2019)', body: 'EdTech, $350M. Saved $140K by killing scaling investment in a $5M ARR product through business-case analysis presented to Head of Product.', tags: 'product,pm,data,analytics,education,user,research,impact,metric' },
-    { id: 'exp-palindrome', section: 'experience', title: 'Software Engineer at PalindromeVR (2016–2018)', body: 'Shipped 2 VR titles end-to-end on Google Daydream. 4.1-star rating across 12 countries.', tags: 'engineer,gaming,vr,build,ship,google' },
+    { id: 'writing-enigma', section: 'writing', title: 'The Enigma of the Valley', body: 'Featured essay on what actually makes startups succeed and why most answers are useless. Startup strategy, venture capital, market dynamics.', tags: 'writing,written,essay,blog,article,startup,venture,vc,strategy,market,product,enigma,valley' },
+    { id: 'exp-gs', section: 'experience', title: 'Product Manager — AI/ML Products at Goldman Sachs (2022–2026)', body: 'Shipped LLM Deal Pricing workflow (RAG with hybrid embedding + keyword retrieval, source-linked outputs, MD-benchmarked eval suite) — cut research from 5–10 min to 2–3 min per deal, ~90% fewer errors. Built ML Payment Monitoring — proactive rules, automated context delivery, ML prioritization by failure likelihood — ~50% faster per payment, ~70% cost reduction. Led 15+ engineers, 2 UX designers, 4 data scientists across 30+ sprints. Also launched 0→1 ML-driven B2B Fintech platform — $10M+ volume in 12 months, 40% higher approvals, 25% lower default risk.', tags: 'ai,ml,product,pm,fintech,leadership,team,hire,lending,payment,data,impact,metric,build,ship,rag,llm,eval,work,worked,experience,job,career,goldman,sachs' },
+    { id: 'exp-gs-deal', section: 'experience', title: 'Goldman Sachs — LLM Deal Pricing Workflow (Deep Dive)', body: 'An LLM-powered internal tool for Managing Directors doing deal pricing in Investment Banking. Problem: MDs spent 5-10 minutes per deal manually searching through past deal comps and pricing precedents across scattered internal databases, PDFs, and spreadsheets. Data was siloed and search was keyword-only, so MDs often missed relevant comps or re-entered data manually, introducing errors. Solution: RAG pipeline with hybrid retrieval — combines embedding-based semantic search (for conceptual similarity — e.g. "similar deal structure") with BM25 keyword matching (for exact terms — e.g. specific company names, deal types, dates). This hybrid approach catches both fuzzy and exact matches, which neither method does alone. Every output is source-linked — each data point traces back to the original document, so MDs can verify and trust the results without blind faith in the LLM. Anmol designed and built the eval harness himself. It benchmarks the system against MD-curated gold-standard comp sets: for a given deal, what are the 10 best comps an experienced MD would pick? Then measures precision (are the system\'s comps actually relevant?), recall (does it find the ones the MD picked?), and factual accuracy (are the numbers correct?). This eval harness became the standard quality measurement tool for the entire team. Result: cut research time from 5-10 min to 2-3 min per deal, ~90% fewer data-entry errors. MDs trust it because they can see the sources.', tags: 'ai,llm,rag,eval,goldman,deal,pricing,embedding,bm25,retrieval,md,research,accuracy,benchmark,hybrid,source,investment,banking' },
+    { id: 'exp-gs-payment', section: 'experience', title: 'Goldman Sachs — ML Payment Monitoring (Deep Dive)', body: 'An ML-driven system for proactively detecting and prioritizing failing payments before they escalate into costly incidents. Problem: payment operations teams at Goldman were reacting to failures after the fact — manually triaging hundreds of alerts daily with no prioritization. A $50 failed payment got the same attention as a $5M one. Teams were overwhelmed, resolution was slow, and costs were high. Solution: built a three-layer system. Layer 1 — Proactive Rule Engine: flags payments likely to fail based on historical patterns (counterparty reliability, time-of-day patterns, corridor-specific failure rates). Catches problems before they become alerts. Layer 2 — Automated Context Delivery: when a payment is flagged, the system automatically surfaces relevant transaction history, counterparty info, and similar past failures so the ops analyst doesn\'t waste time pulling context manually. Layer 3 — ML-Based Prioritization: ranks all flagged payments by failure likelihood AND business impact. A $5M payment with 80% failure probability gets immediate attention; a $50 retry gets deprioritized. Anmol\'s approach: sat with ops teams to watch the system catch failing payments in real time. Iterated on the priority scoring based on what analysts actually needed to see first. The system was designed around how humans actually triage, not how engineers think they should. Result: ~50% faster resolution per payment, ~70% cost reduction in payment operations. The prioritization layer alone saved hours of analyst time daily by eliminating low-value triage.', tags: 'ai,ml,payment,monitoring,ops,rules,prioritization,goldman,operations,cost,automation,triage,proactive,context,analyst' },
+    { id: 'exp-gs-fintech', section: 'experience', title: 'Goldman Sachs — 0→1 ML Fintech Platform (Deep Dive)', body: 'A 0-to-1 ML-driven B2B fintech lending platform built from scratch within Goldman Sachs. Anmol was the founding PM — owned the product from initial concept through launch and scale. Problem: the existing underwriting process was manual, slow, and conservative — rejecting good borrowers and approving risky ones based on incomplete data and human judgment. Solution: ML-powered credit decisioning that ingests far more signals than a human underwriter can process — transaction history patterns, industry risk factors, cash flow seasonality, counterparty network effects. The ML models learned to identify creditworthy borrowers that manual underwriting would reject, while also catching risky ones that looked good on paper. Cross-functional team: 15+ engineers, 4 data scientists, 2 UX designers across 30+ sprints. Anmol owned the roadmap, wrote the PRDs, ran sprint planning, and was embedded with the engineering team daily — not a PM who specs and disappears. Results: 40% higher approval rates with 25% lower default risk (better decisions, not just more approvals). Hit $10M+ transaction volume in the first 12 months. The platform proved that ML-driven lending could outperform human judgment on both precision and recall.', tags: 'fintech,lending,ml,0to1,launch,platform,credit,underwriting,goldman,leadership,team,volume,growth,approval,default,risk,decisioning' },
+    { id: 'exp-formlabs', section: 'experience', title: 'Software PM Intern at Formlabs (2021)', body: '$2B 3D printing company. Launched online shopping for Form 3L/3BL. Diagnosed 47% config drop-off, built guided questionnaire — cut drop-off to 28%, +23% conversion, +18% AOV, ~35% fewer support tickets. $2M+ projected revenue. 12 usability tests, 1000+ survey responses.', tags: 'product,pm,hardware,ecommerce,usability,ux,research,user,build,ab-testing,work,worked,experience,job,career,formlabs' },
+    { id: 'exp-civitas', section: 'experience', title: 'PM Intern at Civitas Learning (2019)', body: 'EdTech, $350M. Saved $140K by killing scaling investment in a $5M ARR product through business-case analysis presented to Head of Product.', tags: 'product,pm,data,analytics,education,user,research,impact,metric,work,worked,experience,job,career,civitas' },
+    { id: 'exp-palindrome', section: 'experience', title: 'Software Engineer at PalindromeVR (2016–2018)', body: 'Shipped 2 VR titles end-to-end on Google Daydream. 4.1-star rating across 12 countries.', tags: 'engineer,gaming,vr,build,ship,google,work,worked,experience,job,career,palindrome' },
     { id: 'exp-musigma', section: 'experience', title: 'Decision Scientist at Mu Sigma (2015–2016)', body: '$1.5B decision sciences firm. Built ad analytics framework for Fortune 200 retailer. 200+ campaigns/month, ~$1.3M profit impact.', tags: 'data,analytics,advertising,metric,impact' },
     { id: 'exp-ut-gra', section: 'experience', title: 'Graduate Research Assistant — Simulations & Game Applications Lab, UT Austin (2019)', body: 'Built UI and refactored codebase for Environ, an educational game about global decision-making. Reduced game size by 37%. Published to the Mac App Store. Featured in the Austin Chronicle.', tags: 'experience,research,games,unity,ui,engineering,austin,ut' },
-    { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'Focus on Human-Computer Interaction. 3.94 GPA, Top 2% of class. B.Tech in CS plus a Master\'s in Computer Science — doesn\'t just write code, understands it.', tags: 'education,cs,hci,research,ux,ai,masters' },
-    { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: 'education,cs,engineer,india' },
-    { id: 'skills-ai', section: 'skills', title: 'AI & ML Skills', body: 'LLM APIs (Claude, OpenAI), Agentic AI, Multi-Agent Systems, RAG (hybrid embedding + keyword retrieval), Eval Harnesses, Prompt Engineering, ML Modeling, Model-Tier Routing.', tags: 'ai,ml,llm,agent,rag,data,pipeline,eval,claude,prompt,routing' },
-    { id: 'skills-eng', section: 'skills', title: 'Engineering Skills', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Deno/Edge Functions, Claude Code, Claude API, Jina AI, Data Pipelines, Git, CI/CD.', tags: 'engineer,python,swift,typescript,sql,data,build,supabase,deno,jina,git' },
-    { id: 'skills-prod', section: 'skills', title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing, Sprint Planning, Cross-Functional Leadership (Engineering, Data Science, UX), Stakeholder Management, 0-to-1 Product Launches.', tags: 'product,pm,strategy,user,research,ux,roadmap,prd,sprint,leadership,launch' },
+    { id: 'edu-ut', section: 'education', title: 'UT Austin — M.S. Computer and Information Science (2018–2021)', body: 'Focus on Human-Computer Interaction. 3.94 GPA, Top 2% of class. B.Tech in CS plus a Master\'s in Computer Science — doesn\'t just write code, understands it.', tags: 'education,cs,hci,research,ux,ai,masters,study,studied,school,university,degree,college,gpa,ut,austin,texas' },
+    { id: 'edu-nmims', section: 'education', title: 'NMIMS Mumbai — B.Tech Computer Science (2011–2015)', body: 'Full computer science degree — algorithms, data structures, systems, databases. The engineering foundation that lets him speak fluently with any dev team.', tags: 'education,cs,engineer,india,study,studied,school,university,degree,college,mumbai,nmims,btech' },
+    { id: 'skills-ai', section: 'skills', title: 'AI & ML Skills', body: 'LLM APIs (Claude, OpenAI), Agentic AI, Multi-Agent Systems, RAG (hybrid embedding + keyword retrieval), Eval Harnesses, Prompt Engineering, ML Modeling, Model-Tier Routing.', tags: 'ai,ml,llm,agent,rag,data,pipeline,eval,claude,prompt,routing,skill,skills,technologies,tech,stack,tools' },
+    { id: 'skills-eng', section: 'skills', title: 'Engineering Skills', body: 'Python, SwiftUI, TypeScript, SQL, Supabase, Deno/Edge Functions, Claude Code, Claude API, Jina AI, Data Pipelines, Git, CI/CD.', tags: 'engineer,python,swift,typescript,sql,data,build,supabase,deno,jina,git,skill,skills,technologies,tech,stack,tools,code,programming,languages' },
+    { id: 'skills-prod', section: 'skills', title: 'Product Craft', body: 'Roadmapping, PRD Writing, User Research, A/B Testing, Sprint Planning, Cross-Functional Leadership (Engineering, Data Science, UX), Stakeholder Management, 0-to-1 Product Launches.', tags: 'product,pm,strategy,user,research,ux,roadmap,prd,sprint,leadership,launch,skill,skills,craft,ability,abilities' },
     { id: 'about-builder', section: 'about', title: 'About Anmol — Builder by instinct', body: 'Can\'t encounter a problem without wanting to prototype a solution. Shipped VR games, then pivoted to Product Management, and now he\'s built a multi-agent social deduction game — follows curiosity wherever it goes.', tags: 'about,personality,builder,curious,prototype,vr' },
     { id: 'about-journey', section: 'about', title: 'About Anmol — Mumbai to Austin to Dallas', body: 'Grew up in Mumbai, grad school in Austin, shipped production AI at Goldman in Dallas. Code-switches between cultures, teams, and time zones easily.', tags: 'about,mumbai,austin,dallas,india,culture,background' },
     { id: 'about-gaming', section: 'about', title: 'About Anmol — Gaming brain', body: 'Analyzes esports metas and competitive game balance with the same rigor he brings to product funnels. If it\'s a system with hidden variables and emergent behavior, he\'s already thinking about it.', tags: 'about,gaming,esports,competitive,systems' },
@@ -1116,6 +1123,26 @@ window.anmol={
     'data': ['data','analytics','analysis','metric','metrics','pipeline'],
     'impact': ['impact','metric','metrics','revenue','profit','cost','growth'],
     'research': ['research','hci','usability','user','ux'],
+    'worked': ['work','worked','experience','job','career','goldman'],
+    'work': ['work','worked','experience','job','career'],
+    'job': ['job','work','worked','experience','career','hire'],
+    'career': ['career','work','experience','job'],
+    'experience': ['experience','work','worked','job','career'],
+    'written': ['writing','written','essay','blog','article','enigma'],
+    'writing': ['writing','written','essay','blog','article'],
+    'essay': ['essay','writing','written','blog','article','enigma'],
+    'studied': ['study','studied','education','school','university','degree','college'],
+    'education': ['education','study','studied','school','university','degree'],
+    'school': ['school','education','university','college','degree'],
+    'university': ['university','education','school','college','degree'],
+    'skills': ['skill','skills','technologies','tech','stack','tools'],
+    'tech': ['tech','stack','technologies','tools','skills','engineering'],
+    'stack': ['stack','tech','technologies','tools','skills'],
+    'architecture': ['architecture','arch','system','design','pipeline','technical'],
+    'mole': ['mole','agent','agents','deduction','mystery','bluff'],
+    'fund': ['fund','matcher','pe','private','equity','deal','sourcing'],
+    'pipeline': ['pipeline','stage','stages','flow','process','system'],
+    'degree': ['degree','education','university','school','college','masters','btech'],
   };
 
   function expandQuery(tokens) {
@@ -1206,18 +1233,106 @@ window.anmol={
 
   /* ── Fallback: local response from retrieved chunks ── */
   function buildFallback(query, retrieved) {
-    if (!retrieved.length) return "Hmm, I don't have a great match for that. Try asking about AI, product management, what Anmol has built, or why you should hire him.";
-    // Build a natural-sounding response from chunks
-    if (query.toLowerCase().includes('hire')) {
-      return 'Here\'s the case: Anmol shipped three production AI/ML systems at Goldman Sachs in 4 years. His LLM-powered Deal Pricing workflow uses RAG with hybrid retrieval and source-linked outputs to surface relevant deal comps for MDs — cut research time by 70% with ~90% fewer data-entry errors. He built the eval harness to benchmark it against MDs himself. His ML Payment Monitoring system proactively flags failing payments before they escalate — 50% faster per payment, 70% cost reduction. He also launched a 0→1 ML-driven fintech platform that hit $10M+ volume in 12 months. He led 15+ engineers, 4 data scientists, and 2 UX designers across 30+ sprints. On his own time, he built The Mole — an iOS game where 4 AI agents with persistent memory play social deduction rounds, arguing and bluffing in real time. His AI PE Fund Matcher takes a company URL and returns ranked PE funds likely to acquire it — 4 hours of research in 18 seconds at 95% accuracy. M.S. from UT Austin, 3.94 GPA, top 2%. Most PMs spec and hand off. Anmol specs, builds, and evals.';
+    if (!retrieved.length) return "Hmm, I don't have a great match for that. Try asking about Anmol's projects, experience at Goldman Sachs, skills, writing, or why you should hire him.";
+    const lower = query.toLowerCase();
+    const top = retrieved[0];
+    const topSection = top.section;
+
+    // Hire — full pitch
+    if (lower.includes('hire') || lower.includes('recruit') || lower.includes('candidate')) {
+      return 'Here\'s the case: Anmol shipped three production AI/ML systems at Goldman Sachs in 4 years. His LLM-powered Deal Pricing workflow uses RAG with hybrid retrieval and source-linked outputs — cut MD research time by 70% with ~90% fewer errors. He built the eval harness himself. His ML Payment Monitoring system flags failing payments proactively — 50% faster per payment, 70% cost reduction. He launched a 0→1 ML fintech platform that hit $10M+ volume in 12 months. Led 15+ engineers, 4 data scientists, and 2 UX designers across 30+ sprints. On his own time: The Mole — an iOS game where 4 AI agents with persistent memory argue and bluff in social deduction rounds. The AI PE Fund Matcher — takes a company URL and returns ranked PE fund matches in 18 seconds at 95% accuracy ($0.33/query vs $400 industry benchmark). M.S. from UT Austin, 3.94 GPA, top 2%. Most PMs spec and hand off. Anmol specs, builds, and evals.';
     }
-    // Combine top chunks if they share a section
+
+    // Project-specific deep dives
+    if (topSection === 'projects') {
+      // Find all project chunks that share the same project (by ID prefix)
+      const projectKey = top.id.split('-').slice(0, 2).join('-'); // e.g. "proj-mole"
+      const related = retrieved.filter(c => c.id.startsWith(projectKey));
+      if (related.length > 1) {
+        // Combine overview + deep dive naturally
+        const overview = related.find(c => !c.id.includes('arch') && !c.id.includes('pipeline') && !c.id.includes('output') && !c.id.includes('writing'));
+        const deepDives = related.filter(c => c !== overview);
+        let response = overview ? overview.body : related[0].body;
+        deepDives.forEach(c => { response += '\n\n' + c.body; });
+        return response;
+      }
+      // Single chunk — return the full body
+      return top.body;
+    }
+
+    // Experience deep dives — Goldman products
+    if (topSection === 'experience') {
+      const gsChunks = retrieved.filter(c => c.id.startsWith('exp-gs'));
+      const isGSSpecific = lower.includes('goldman') || lower.includes('deal') || lower.includes('payment') || lower.includes('fintech') || lower.includes('lending');
+      if (isGSSpecific && gsChunks.length) {
+        // Specific Goldman deep dive question
+        const deepDive = gsChunks.find(c =>
+          (lower.includes('deal') && c.id.includes('deal')) ||
+          (lower.includes('payment') && c.id.includes('payment')) ||
+          ((lower.includes('fintech') || lower.includes('lending')) && c.id.includes('fintech'))
+        );
+        if (deepDive) return deepDive.body;
+        // General Goldman question — return overview
+        const overview = gsChunks.find(c => c.id === 'exp-gs');
+        if (overview) return overview.body;
+      }
+      // General experience question — show all roles
+      const allExp = retrieved.filter(c => c.section === 'experience');
+      if (allExp.length > 1) {
+        const overview = allExp.find(c => c.id === 'exp-gs');
+        if (overview) {
+          let response = overview.body;
+          const others = allExp.filter(c => c !== overview && !c.id.includes('-deal') && !c.id.includes('-payment') && !c.id.includes('-fintech'));
+          if (others.length) {
+            response += '\n\nBefore Goldman: ' + others.map(c => c.title + ' — ' + c.body.split('.').slice(0, 2).join('.') + '.').join(' ');
+          }
+          return response;
+        }
+      }
+      return top.body;
+    }
+
+    // Education
+    if (topSection === 'education') {
+      const eduChunks = retrieved.filter(c => c.section === 'education');
+      if (eduChunks.length > 1) {
+        return eduChunks.map(c => c.body).join('\n\n');
+      }
+      return top.body;
+    }
+
+    // Skills
+    if (topSection === 'skills') {
+      const skillChunks = retrieved.filter(c => c.section === 'skills');
+      if (skillChunks.length > 1) {
+        return skillChunks.map(c => c.title + ': ' + c.body).join('\n\n');
+      }
+      return top.title + ': ' + top.body;
+    }
+
+    // About
+    if (topSection === 'about') {
+      const aboutChunks = retrieved.filter(c => c.section === 'about');
+      return aboutChunks.map(c => c.body).join('\n\n');
+    }
+
+    // Writing
+    if (topSection === 'writing') {
+      return top.body;
+    }
+
+    // Generic — combine top 3 chunks intelligently
     const top3 = retrieved.slice(0, 3);
     if (top3.length > 1 && top3.every(c => c.section === top3[0].section)) {
-      return top3.map(c => c.title + ' — ' + c.body.split('.').slice(0, 2).join('.') + '.').join('\n\n');
+      return top3.map(c => c.body).join('\n\n');
     }
-    const top = retrieved[0];
-    return top.title + ' — ' + top.body.split('.').slice(0, 3).join('.') + '.';
+    // Mixed sections — use the top chunk fully, add brief context from #2
+    let response = top.body;
+    if (retrieved.length > 1) {
+      const second = retrieved[1];
+      response += '\n\nRelated: ' + second.title + ' — ' + second.body.split('.').slice(0, 2).join('.') + '.';
+    }
+    return response;
   }
 
   function streamLocal(container, text) {
