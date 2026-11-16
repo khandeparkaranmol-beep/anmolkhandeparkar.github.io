@@ -1,3 +1,8 @@
 .DS_Store
 *.zip
 **/.fuse_hidden*
+
+# Local tooling and standalone review copies
+node_modules/
+paper-school-preview.html
+paper-school-preview-light.html
